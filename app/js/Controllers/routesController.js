@@ -55,6 +55,12 @@ define(['angular', 'async!googleMapsApi'], function(){
                 }
             );
         });
+
+        $('div#mainHeader').on('mousedown', function(){
+            $(this).removeClass('main-header-shadowed');
+        }).on('mouseup', function(){
+            $(this).addClass('main-header-shadowed');
+        });
     }
 
 

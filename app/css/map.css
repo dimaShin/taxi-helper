@@ -1,6 +1,7 @@
 body {
     margin: 0px;
     padding: 0px;
+    background-color: darkslategray !important;
 }
 .map-canvas {
     border: 2px solid #ccc;
@@ -28,12 +29,16 @@ body {
 }
 .main-header {
     top: 0px;
+    left: 0px;
     height: 30px;
     display: inline;
     line-height: 30px;
     font-weight: bold;
     width: 100%;
     color: #fff !important;
+
+}
+.main-header-shadowed {
     -webkit-box-shadow: 0px 3px 2px 0px rgba(50, 50, 50, 0.75);
     -moz-box-shadow:    0px 3px 2px 0px rgba(50, 50, 50, 0.75);
     box-shadow:         0px 3px 2px 0px rgba(50, 50, 50, 0.75);
@@ -116,6 +121,23 @@ body {
 .animation.ng-enter.ng-enter-active {
     opacity: 1;
     margin-left: 0px;
+}
+.routes-bg {
+    background-color: darkslategray;
+    padding: 5px;
+    border: 1px solid #ccc;
+}
+
+/*jquery-ui selector options*/
+.ui-slider {
+    font-size: 1em !important;
+    height: 0.5em !important;
+}
+
+.ui-slider .ui-slider-handle {
+    height: 1em !important;
+    width: 1em !important;
+    top: -0.3em !important;
 }
 
 

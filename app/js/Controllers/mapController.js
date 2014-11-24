@@ -62,6 +62,11 @@ define(['angular', 'async!googleMapsApi'], function(){
             };
             console.log('check new routes: ', checkNewRoutes);
             $interval(checkNewRoutes, 1000);
+            $('div#mainHeader').on('mousedown', function(){
+                $(this).removeClass('main-header-shadowed');
+            }).on('mouseup', function(){
+                $(this).addClass('main-header-shadowed');
+            });
         })($scope);
 
         function checkNewRoutes(){
