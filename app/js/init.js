@@ -13,7 +13,8 @@ requirejs.config({
         googleMapsApi: 'https://maps.googleapis.com/maps/api/js?v=3&callback=isNaN&language=ru',
         async: '_lib/require-async',
         ngAnimate: '_lib/angular-animate',
-        jqueryUI: '_lib/jquery-ui-1.11.2/jquery-ui'
+        jqueryUI: '_lib/jquery-ui-1.11.2/jquery-ui',
+        ngTouch: '_lib/angular-touch'
     },
     shim: {
         angular: {
@@ -37,6 +38,9 @@ requirejs.config({
         },
         jqueryUI: {
             deps: ['jquery']
+        },
+        ngTouch: {
+            deps: ['angular']
         }
     }
 });
