@@ -1,0 +1,36 @@
+        <!--<span class="route-title">Новый заказ: (еще {{routes.length}} в очереди</span><br/>-->
+        <!--<span class="route-point">От: {{route.start_address}}</span><br />-->
+        <!--<span class="route-point">До: {{route.end_address}} ({{route.distance}})</span><br />-->
+        <!--<span class="route-price">Стоимость: {{route.price | currency : 'грн ' : 0}}</span><br />-->
+        <!--<button class="route-btn" type="button" ng-show="route.accepted" ng-click="route.accepted=false;$event.stopPropagation()">Отказаться</button>-->
+        <!--<button class="route-btn" type="button" ng-hide="route.accepted" ng-click="route.accepted=true;$event.stopPropagation()">Принять</button>-->
+        <!--<button class="route-btn" type="button" ng-click="showRoute(route.route);$event.stopPropagation()">Проложить маршрут</button><br />-->
+        <!--<a class="route-full" href="javascript:;" ng-click="showRoute(route, true);$event.stopPropagation()">Показать маршрут от текущей точки</a>-->
+<div class="container-fluid routes-title text-center">
+    {{routes.length}} <span ng-show="routes.length > 1">Новых маршрута</span><span ng-show="routes.length === 1">Новый маршрут</span>
+</div>
+<div class="container-fluid slider-frame well well-sm">
+    <ul class="routes pointer slider" id="slider">
+        <li ng-repeat="route in routes">
+            <span class="route-point container-fluid">От: {{route.start_address}}</span>
+            <span class="route-point container-fluid">До: {{route.end_address}}</span>
+            <div class="container-fluid">
+                <span class="col-xs-6 pull-left">Расстояние: {{route.distance}}</span><span class="col-xs-6 pull-right">Стоимость: {{route.price | currency : 'грн ' : 0}}</span>
+            </div>
+
+            <div class="container-fluid">
+                <div class="col-xs-6 text-center">
+                    <button class="route-btn" type="button" ng-click="mapCtrl.cancelRoute(route)">Cancel</button>
+                    <button class="route-btn" type="button" ng-click="mapCtrl.go(route)" >Go</button>
+                </div>
+                <div class="col-xs-6 text-center">
+                    <button class="route-btn" type="button" ng-click="mapCtrl.renderRoute(route)">Маршрут</button>
+                </div>
+            </div>
+
+        </li>
+    </ul>
+</div>
+
+<div class="slider-arrow left"><a href="javascript:;" ng-click="slide('left')"><span class="glyphicon glyphicon-backward" aria-hidden="true"></span></a></div>
+<div class="slider-arrow right"><a href="javascript:;" ng-click="slide('right')"><span class="glyphicon glyphicon-forward" aria-hidden="true"></span></a></div>

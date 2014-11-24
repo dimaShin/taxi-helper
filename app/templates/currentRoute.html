@@ -1,0 +1,11 @@
+<div class="accepted-header" ng-click="contentVisibility = !contentVisibility">
+    {{route.start_address}} ({{route.price | currency : 'грн ' : 0}})
+    <span class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true" ng-hide="contentVisibility"></span>
+    <span class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true" ng-show="contentVisibility"></span>
+</div>
+<div class="accepted-content" ng-show="contentVisibility">
+    <span class="route-point">До: {{route.end_address}} ({{route.distance}})</span><br />
+    <button class="route-btn" type="button" ng-click="completeRoute()">Выполнен</button>
+    <!--<button class="route-btn" type="button" >Проложить маршрут</button><br />-->
+    <!--<a class="route-full" href="javascript:;" ng-click="showRoute(accepted, true);$event.stopPropagation()">Показать маршрут от текущей точки</a>-->
+</div>

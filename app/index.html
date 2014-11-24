@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <link href="css/map.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="js/_lib/jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Такси Любимое</title>
+    <base href="/">
+</head>
+<body>
+
+    <ng-view></ng-view>
+    <!--<div class="accepted-offer" ng-show="accepted.id" ng-animate=" 'slide' ">-->
+        <!--&lt;!&ndash;<span class="route-title">Принятый заказ:</span><br />&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="route-point">От: {{accepted.start_address}} ({{accepted.preDistance}})</span><br />&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="route-point">До: {{accepted.end_address}} ({{accepted.distance}})</span><br />&ndash;&gt;-->
+        <!--&lt;!&ndash;<span class="route-price">Стоимость: {{accepted.price | currency : 'грн ' : 0}}</span><br />&ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="route-btn" type="button" ng-click="cancelAccepted();$event.stopPropagation()">Отказаться</button>&ndash;&gt;-->
+        <!--&lt;!&ndash;<button class="route-btn" type="button" ng-click="showRoute(accepted.route);$event.stopPropagation()">Проложить маршрут</button><br />&ndash;&gt;-->
+        <!--&lt;!&ndash;<a class="route-full" href="javascript:;" ng-click="showRoute(accepted, true);$event.stopPropagation()">Показать маршрут от текущей точки</a>&ndash;&gt;-->
+    <!--</div>-->
+    <!--<div class="orders-window hidden" ng-show="routes.length" ng-cloak>-->
+        <!--<ul class="routes pointer">-->
+            <!--<li ng-repeat="route in routes" ng-click="showRoute(route.route)" ng-animate="'animate'">-->
+                <!--<span class="route-title">Заказ:{{route.id}}</span><br/>-->
+                <!--<span class="route-point">От: {{route.start_address}} ({{route.preDistance}})</span><br />-->
+                <!--<span class="route-point">До: {{route.end_address}} ({{route.distance}})</span><br />-->
+                <!--<span class="route-price">Стоимость: {{route.price | currency : 'грн ' : 0}}</span><br />-->
+                <!--<button class="route-btn" type="button" ng-show="route.accepted" ng-click="route.accepted=false;$event.stopPropagation()">Отказаться</button>-->
+                <!--<button class="route-btn" type="button" ng-hide="route.accepted" ng-click="route.accepted=true;$event.stopPropagation()">Принять</button>-->
+                <!--<button class="route-btn" type="button" ng-click="showRoute(route.route);$event.stopPropagation()">Проложить маршрут</button><br />-->
+                <!--<a class="route-full" href="javascript:;" ng-click="showRoute(route, true);$event.stopPropagation()">Показать маршрут от текущей точки</a>-->
+                <!--<hr />-->
+            <!--</li>-->
+        <!--</ul>-->
+    <!--</div>-->
+    <audio id="incomingBell" class="audio" ng-hide="always">
+        <source src="source/ring.ogg" type="audio/ogg" />
+    </audio>
+    <script type="text/javascript" src="js/_lib/require.js" data-main="js/init"></script>
+</body>
+</html>

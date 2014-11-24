@@ -1,0 +1,22 @@
+        <span class="route-title">Новый заказ: (еще {{routes.length}} в очереди</span><br/>
+        <span class="route-point">От: {{route.start_address}}</span><br />
+        <span class="route-point">До: {{route.end_address}} ({{route.distance}})</span><br />
+        <span class="route-price">Стоимость: {{route.price | currency : 'грн ' : 0}}</span><br />
+        <button class="route-btn" type="button" ng-show="route.accepted" ng-click="route.accepted=false;$event.stopPropagation()">Отказаться</button>
+        <button class="route-btn" type="button" ng-hide="route.accepted" ng-click="route.accepted=true;$event.stopPropagation()">Принять</button>
+        <button class="route-btn" type="button" ng-click="showRoute(route.route);$event.stopPropagation()">Проложить маршрут</button><br />
+        <a class="route-full" href="javascript:;" ng-click="showRoute(route, true);$event.stopPropagation()">Показать маршрут от текущей точки</a>
+
+<!--<ul class="routes pointer">-->
+    <!--<li ng-repeat="route in routes" ng-click="showRoute(route.route)" ng-animate="'animate'">-->
+        <!--<span class="route-title">Заказ:{{route.id}}</span><br/>-->
+        <!--<span class="route-point">От: {{route.start_address}} ({{route.preDistance}})</span><br />-->
+        <!--<span class="route-point">До: {{route.end_address}} ({{route.distance}})</span><br />-->
+        <!--<span class="route-price">Стоимость: {{route.price | currency : 'грн ' : 0}}</span><br />-->
+        <!--<button class="route-btn" type="button" ng-show="route.accepted" ng-click="route.accepted=false;$event.stopPropagation()">Отказаться</button>-->
+        <!--<button class="route-btn" type="button" ng-hide="route.accepted" ng-click="route.accepted=true;$event.stopPropagation()">Принять</button>-->
+        <!--<button class="route-btn" type="button" ng-click="showRoute(route.route);$event.stopPropagation()">Проложить маршрут</button><br />-->
+        <!--<a class="route-full" href="javascript:;" ng-click="showRoute(route, true);$event.stopPropagation()">Показать маршрут от текущей точки</a>-->
+        <!--<hr />-->
+    <!--</li>-->
+<!--</ul>-->

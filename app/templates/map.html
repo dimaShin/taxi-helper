@@ -1,0 +1,6 @@
+<div class="main-header container-fluid text-center top-layer">
+    <a href="/routes">Все маршруты</a>
+</div>
+<div google-map methods="methods" markers="markers" route="currentRoute" class="container-fluid"></div>
+<div ng-show="currentRoute.id" current-route route="currentRoute" methods="methods" class="top-layer current-route text-center"></div>
+<div new-routes methods="methods" routes="routes" ng-show="routes.length" on-the-route="onTheRoute" class="top-layer new-routes"></div>
