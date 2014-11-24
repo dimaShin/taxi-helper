@@ -3,12 +3,10 @@
         <div class="raw">
             <span class="selector-caption">Выбрать точку:</span><br />
             <select ng-model="point" name="point" ng-options="point.caption for point in points" class="container-fluid" style="width:100%">
-                <!--<option ng-repeat="el in points" value="el">{{ el.caption }}</option>-->
             </select>
         </div>
         <div class="raw">
             <span class="selector-caption">Выбрать радиус:</span>({{ radius / 1000 }}км)<br />
-            <!--<input type="numbers" ng-model="radius" placeholder="от 500 до 5000" name="radius" class="hidden"/>-->
             <div id="slider" class="radius-selector"></div>
         </div>
     </form>

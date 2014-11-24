@@ -78,7 +78,6 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
                             newOrders.push(order);
                         }
                     );
-                    //newOrders.push(allOrders.shift());
                 }
             }, 500, allOrders.length, false);
 
@@ -234,43 +233,15 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
                 return suitedOrders;
             },
             getOrderInBounds: function(bounds, driverId){
-                //console.log('operator service received request');
                 var deferred = $.Deferred(),
-                    hasSuitableOffer = false,
                     suitedOffers = [];
 
                 for(var i in newOrders){
                     if(bounds.contains(newOrders[i].start)){
-                        //console.log('found suited order');
                         if(-1 === canceledRoutes.indexOf(newOrders[i].id)){
                             suitedOffers.push(newOrders[i]);
                         }else{
-                            console.log('route canceled, skipped');
                         }
-
-                    //    hasSuitableOffer = true;
-                    //    newOrders[i].id = getOrderId(newOrders[i]);
-                    //    if(!markDriver(newOrders[i].id, driverId)){
-                    //        console.log('order already returned. Skip this');
-                    //        continue;
-                    //    }
-                    //    if(newOrders[i].route){
-                    //        console.log('returning saved route');
-                    //        deferred.resolve(newOrders[i]);
-                    //    }else{
-                    //        console.log('creating route');
-                    //        createRoute(newOrders[i].start, newOrders[i].finish).then(
-                    //            function success(response){
-                    //                console.log('route created!');
-                    //                newOrders[i].route = response;
-                    //                deferred.resolve(newOrders[i]);
-                    //            },
-                    //            function error(error){
-                    //                deferred.reject('error creating route: ' + error);
-                    //            }
-                    //        );
-                    //    }
-                    //break;
                     }
                 }
                 if(suitedOffers.length){

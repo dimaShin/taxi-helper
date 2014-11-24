@@ -11,7 +11,6 @@ define([''], function(){
                 orders: '='
             },
             controller: function($scope){
-                //console.log('default points: ', $scope.points);
             },
             compile: function(){
 

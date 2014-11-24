@@ -73,8 +73,6 @@ define(['angular', 'async!googleMapsApi'], function(){
                 };
 
                 $scope.cancelRoute = function(route){
-                    //var index = $scope.routes.indexOf(route);
-                    //$scope.routes.splice(index, 1);
                     $scope.mapCtrl.cancelRoute(route);
                 }
             }
