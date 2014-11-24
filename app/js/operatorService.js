@@ -62,7 +62,8 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
             }
             ],
             newOrders = [],
-            drivers = {};
+            drivers = {},
+            canceledRoutes = [];
         $interval(function getNewOrder(){
                 if(allOrders.length){
                     var order = allOrders.shift();
@@ -161,7 +162,7 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
                             }else{
                                 createRoute(newOrders[i].start, newOrders[i].finish).then(
                                     function success(route){
-                                        var order = newOrders[i]
+                                        var order = newOrders[i];
                                         order.route = route;
                                         order.start_address = getNormalizedAddress(route.routes[0].legs[0].start_address);
                                         order.end_address = getNormalizedAddress(route.routes[0].legs[0].end_address);
@@ -205,9 +206,14 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
             if(index !== -1){
                 newOrders.splice(index, 1);
             }
-        }
+        };
+
+        function cancelRoute(order){
+            canceledRoutes.push(order.id);
+        };
 
         return {
+            cancelRoute: cancelRoute,
             completeRoute: completeRoute,
             getAllOrdersInBounds: getAllOrdersInBounds,
             getOrders: function(currentPoint, radius){
@@ -236,7 +242,12 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
                 for(var i in newOrders){
                     if(bounds.contains(newOrders[i].start)){
                         //console.log('found suited order');
-                        suitedOffers.push(newOrders[i]);
+                        if(-1 === canceledRoutes.indexOf(newOrders[i].id)){
+                            suitedOffers.push(newOrders[i]);
+                        }else{
+                            console.log('route canceled, skipped');
+                        }
+
                     //    hasSuitableOffer = true;
                     //    newOrders[i].id = getOrderId(newOrders[i]);
                     //    if(!markDriver(newOrders[i].id, driverId)){
@@ -277,4 +288,4 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
         }
     });
 
-})
+});

@@ -110,11 +110,10 @@ define(['angular', 'async!googleMapsApi'], function(){
         };
 
         function createCircle(center){
-            var circle = new google.maps.Circle({
+            return new google.maps.Circle({
                         center: center,
                         radius: $scope.radius
                     });
-            return circle;
         };
 
         function getNormalizedAddress(address){
@@ -147,6 +146,7 @@ define(['angular', 'async!googleMapsApi'], function(){
 
             $scope.routes.splice(index, 1);
             $scope.markers.splice(index, 1);
+            operatorService.cancelRoute(route);
             console.log('route canceled');
             //$scope.$broadcast('mapController:cancelRoute', route);
         };
