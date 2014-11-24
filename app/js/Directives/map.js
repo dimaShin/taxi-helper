@@ -86,28 +86,6 @@ define(['angular', 'async!googleMapsApi'], function(){
                                         });
                                 }
 
-                                //var count = Math.max($scope.markers.length, markers.length);
-                                //console.log('starting iteration :', $scope.markers, markers, ' from ', count);
-                                //for(var i = count - 1; i >= 0; i--){
-                                //    if(markers[i] && !isMarkerInArray(markers[i].id, $scope.markers)){
-                                //        console.log('deleting marker: ', markers[i]);
-                                //        markers[i].marker.setMap(null);
-                                //        markers.splice(i, 1);
-                                //    }
-                                //    if($scope.markers[i] && !isMarkerInArray($scope.markers[i].id, markers)){
-                                //        console.log('drawing marker: ', i);
-                                //        var marker = new google.maps.Marker({
-                                //            position: $scope.markers[i].start,
-                                //            draggable: false,
-                                //            map: $scope.map
-                                //        });
-                                //        markers.push({
-                                //            marker: marker,
-                                //            id: $scope.markers[i].id,
-                                //            route: $scope.markers[i].route
-                                //        });
-                                //    }
-                                //}
                             }
                         );
 
