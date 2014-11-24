@@ -2,5 +2,5 @@
     Все маршруты
 </div></a>
 <div google-map methods="methods" markers="markers" route="currentRoute" class="container-fluid"></div>
-<div ng-show="currentRoute.id" current-route route="currentRoute" methods="methods" class="top-layer current-route text-center"></div>
-<div new-routes methods="methods" routes="routes" ng-show="routes.length" on-the-route="onTheRoute" class="top-layer new-routes"></div>
+<div ng-if="currentRoute.id" current-route route="currentRoute" methods="methods" class="top-layer current-route text-center"></div>
+<div new-routes methods="methods" routes="routes" ng-if="routes.length" on-the-route="onTheRoute" class="top-layer new-routes"></div>

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c16998ef-a8eb-4cd0-af48-52e09b3fefbb" name="Default" comment="update cancelRoute">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/js/Controllers/mapController.js" afterPath="$PROJECT_DIR$/app/js/Controllers/mapController.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/js/operatorService.js" afterPath="$PROJECT_DIR$/app/js/operatorService.js" />
+    <list default="true" id="c16998ef-a8eb-4cd0-af48-52e09b3fefbb" name="Default" comment="map route ng-show changes to ng-if">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/templates/map.html" afterPath="$PROJECT_DIR$/app/templates/map.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="taxi-helper-server.iws" />
@@ -38,11 +37,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="map.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="map.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/templates/map.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.3333334" vertical-offset="0" max-vertical-offset="198">
-              <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="10" />
+            <state vertical-scroll-proportion="0.09375" vertical-offset="0" max-vertical-offset="576">
+              <caret line="3" column="52" selection-start-line="3" selection-start-column="52" selection-end-line="3" selection-end-column="52" />
               <folding />
             </state>
           </provider>
@@ -108,11 +107,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="mapController.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="mapController.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/js/Controllers/mapController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.33333334" vertical-offset="1707" max-vertical-offset="2826">
-              <caret line="118" column="17" selection-start-line="118" selection-start-column="17" selection-end-line="118" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="648" max-vertical-offset="2826">
+              <caret line="48" column="43" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
               <folding>
                 <element signature="e#4380#4850#0" expanded="false" />
                 <element signature="e#5277#5462#0" expanded="false" />
@@ -156,10 +155,10 @@
         <option value="$PROJECT_DIR$/app/js/Directives/map.js" />
         <option value="$PROJECT_DIR$/app/js/Controllers/routesController.js" />
         <option value="$PROJECT_DIR$/app/css/map.css" />
-        <option value="$PROJECT_DIR$/app/templates/map.html" />
         <option value="$PROJECT_DIR$/app/templates/routes.html" />
         <option value="$PROJECT_DIR$/app/js/operatorService.js" />
         <option value="$PROJECT_DIR$/app/js/Controllers/mapController.js" />
+        <option value="$PROJECT_DIR$/app/templates/map.html" />
       </list>
     </option>
   </component>
@@ -412,7 +411,13 @@
       <option name="project" value="LOCAL" />
       <updated>1416826292079</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="update cancelRoute">
+      <created>1416834500109</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1416834500109</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -444,7 +449,7 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32978722" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32978722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32978722" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24960506" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -478,7 +483,8 @@
     <option name="LIMIT_HISTORY" value="false" />
     <MESSAGE value="remove some commented code in map.js" />
     <MESSAGE value="update cancelRoute" />
-    <option name="LAST_COMMIT_MESSAGE" value="update cancelRoute" />
+    <MESSAGE value="map route ng-show changes to ng-if" />
+    <option name="LAST_COMMIT_MESSAGE" value="map route ng-show changes to ng-if" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -716,14 +722,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/templates/map.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.3333334" vertical-offset="0" max-vertical-offset="198">
-          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="10" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/templates/routes.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-6.0" vertical-offset="0" max-vertical-offset="342">
@@ -753,8 +751,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/js/Controllers/mapController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.33333334" vertical-offset="1707" max-vertical-offset="2826">
-          <caret line="118" column="17" selection-start-line="118" selection-start-column="17" selection-end-line="118" selection-end-column="17" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="648" max-vertical-offset="2826">
+          <caret line="48" column="43" selection-start-line="48" selection-start-column="43" selection-end-line="48" selection-end-column="43" />
           <folding>
             <element signature="e#4380#4850#0" expanded="false" />
             <element signature="e#5277#5462#0" expanded="false" />
@@ -762,6 +760,14 @@
             <element signature="e#6275#6430#0" expanded="false" />
             <element signature="e#6459#6665#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/templates/map.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.09375" vertical-offset="0" max-vertical-offset="576">
+          <caret line="3" column="52" selection-start-line="3" selection-start-column="52" selection-end-line="3" selection-end-column="52" />
+          <folding />
         </state>
       </provider>
     </entry>
