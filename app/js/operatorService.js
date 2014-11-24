@@ -62,7 +62,6 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
             }
             ],
             newOrders = [],
-            drivers = {},
             canceledRoutes = [];
         $interval(function getNewOrder(){
                 if(allOrders.length){
@@ -112,17 +111,6 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
                 }
             });
             return deferred.promise();
-        };
-
-        function markDriver(orderId, driverId){
-            if(!drivers[driverId]){
-                drivers[driverId] = [];
-            }
-            if(-1 !== drivers[driverId].indexOf(orderId)){
-                return false;
-            }
-            drivers[driverId].push(orderId);
-            return true;
         };
 
         function getBounds(radius, point){
