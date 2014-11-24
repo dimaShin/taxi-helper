@@ -5,7 +5,7 @@
 
 define(['angular', 'async!googleMapsApi'], function(){
 
-    function newRoutesDirective(){
+    function newRoutesDirective($timeout){
         var maxWidth = 700,
             pad = 10;
         return {
@@ -48,21 +48,28 @@ define(['angular', 'async!googleMapsApi'], function(){
                 }
             },
             controller: function($scope){
+                var isAnimationInProgress = false;
+
                 $scope.slide = function(direction){
-                    var marginLeft = parseInt($('ul#slider').css('marginLeft')),
-                        liWidth = $('ul#slider li').width()  + pad;
+                    if(isAnimationInProgress) return;
+                    var slider = $('ul#slider'),
+                        marginLeft = parseInt(slider.css('marginLeft')),
+                        liWidth = $('ul#slider li').width()  + pad,
+                        newValue;
                     if(direction === 'left'){
                         if(marginLeft === 0) return;
-                        $('ul#slider').animate({
-                            marginLeft: "+=" + liWidth
-                        })
+                        newValue = marginLeft + liWidth;
                     }
                     if(direction === 'right'){
-                        if((marginLeft - liWidth) <= -$('ul#slider').width() + (pad * $scope.routes.length)) return;
-                        $('ul#slider').animate({
-                            marginLeft: "-=" + liWidth
-                        })
+                        if((marginLeft - liWidth) <= -slider.width() + (pad * $scope.routes.length)) return;
+                        newValue = marginLeft - liWidth;
                     }
+                    isAnimationInProgress = true;
+                    slider.animate({
+                        marginLeft: newValue
+                    }).promise().then(function(){
+                        isAnimationInProgress = false;
+                    });
                 };
 
                 $scope.cancelRoute = function(route){
