@@ -44,7 +44,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                             function(){
                                 $scope.fitWidth(el);
                             }
-                        )
+                        );
                     }
                 }
             },
