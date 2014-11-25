@@ -125,7 +125,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                             left: (($(window).width() - maxWidth) / 2) + 'px'
                         })
                     }
-                    $('ul#slider li').width($(window).width());
+                    $('ul#slider li').width($(window).width() - pad);
                     console.log(slider);
                 }
             }
