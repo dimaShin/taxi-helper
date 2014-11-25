@@ -26,9 +26,32 @@ define(['angular', 'async!googleMapsApi'], function(){
                 });
                 return {
                     pre: function preLink($scope, el, attr, ctrl){
-                        //var width = $(window).width(),
-                        //    height = $(window).height();
-                        //el.width(width).height(height);
+                        $scope.$watchCollection(
+                            function screenSizeWatcher(){
+                                return {
+                                    width: $(window).width(),
+                                    height: $(window).height()
+                                }
+                            },
+                            function(newValue){
+                                el.width(newValue.width).height(newValue.height);
+                                console.log('window resized: ', el.width(), el.height())
+                                $scope.map = $scope.initializeMap(el[0], {zoom:13});
+                                google.maps.event.addListener($scope.map, 'click', function(e){
+                                    console.log(e);
+                                });
+                                $scope.ctrlMethods.getCurrentPos().then(
+                                    function success(response){
+                                        $scope.cabMarker = new google.maps.Marker({
+                                            position: response,
+                                            draggable: true,
+                                            map: $scope.map,
+                                            icon: 'img/cabs.png'
+                                        });
+                                    }
+                                );
+                            }
+                        );
                     },
                     post: function postLink($scope, el, attr, ctrl){
 
@@ -38,24 +61,6 @@ define(['angular', 'async!googleMapsApi'], function(){
                             renderer.setMap($scope.map);
                             renderer.setDirections(route);
                         }
-
-                        $scope.map = $scope.initializeMap(el[0], {zoom:13});
-                        $scope.ctrlMethods.getCurrentPos().then(
-                            function success(response){
-                                $scope.cabMarker = new google.maps.Marker({
-                                    position: response,
-                                    draggable: true,
-                                    map: $scope.map,
-                                    icon: 'img/cabs.png'
-                                });
-                            }
-                        );
-
-
-                        google.maps.event.addListener($scope.map, 'click', function(e){
-                            console.log(e);
-                        });
-
                         $scope.$on('mapController:renderRoute', renderRoute);
 
                         function cleanMarkers(){
@@ -125,23 +130,15 @@ define(['angular', 'async!googleMapsApi'], function(){
                             }
                         );
 
-                        $scope.$watchCollection(
-                            function screenSizeWatcher(){
-                                return {
-                                    width: $(window).width(),
-                                    height: $(window).height()
-                                }
-                            },
-                            function(newValue){
-                                el.width(newValue.width).height(newValue.height);
-                            }
-                        )
+
                     }
                 }
 
             },
             controller: function($scope){
+
                 $scope.initializeMap = function(el, options){
+                    console.log('window width: ', $(el).width(), $(el).height());
                     var defOptions = {
                         zoom: 14,
                         center: new google.maps.LatLng(49.9672102, 36.3162887),
