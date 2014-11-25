@@ -5,7 +5,7 @@
 
 define(['angular', 'async!googleMapsApi'], function(){
 
-    function newRoutesDirective($timeout){
+    function newRoutesDirective($timeout, $swipe){
         var maxWidth = 700,
             pad = 10;
         return {
@@ -48,20 +48,57 @@ define(['angular', 'async!googleMapsApi'], function(){
                 }
             },
             controller: function($scope){
-                var isAnimationInProgress = false;
-
-                $scope.slide = function(direction){
+                var isAnimationInProgress = false,
+                    slider = $('ul#slider');
+                console.log('swipe: ', $swipe);
+                $scope.originals = {};
+                $swipe.bind($('ul#slider'), {
+                    start: function(e){
+                        $scope.originals.marginLeft = parseInt(slider.css('marginLeft'));
+                        $scope.originals.posX = e.x;
+                        $scope.originals.width = slider.width();
+                        $scope.originals.liWidth = $('ul#slider li').width();
+                    },
+                    move: function(e){
+                        var newMargin = $scope.originals.marginLeft - ($scope.originals.posX - e.x),
+                            rightLimit = $scope.originals.width - $scope.originals.liWidth;
+                        if(newMargin > 0 || Math.abs(newMargin) + (pad * $scope.routes.length) > rightLimit) return;
+                        slider.css({
+                            marginLeft: $scope.originals.marginLeft - ($scope.originals.posX - e.x)
+                        });
+                    },
+                    end: function(){
+                        var marginDiff = Math.abs(parseInt(slider.css('marginLeft'))) - Math.abs($scope.originals.marginLeft);
+                        if(marginDiff === 0) return;
+                        (marginDiff < 0)
+                                ? $scope.slide('left', $scope.originals.marginLeft)
+                                : $scope.slide('right', $scope.originals.marginLeft)
+                    },
+                    cancel: function(){
+                        slider.css({
+                            marginLeft: $scope.originals.marginLeft
+                        });
+                    }
+                });
+                $scope.slide = function(direction, marginLeft){
                     if(isAnimationInProgress) return;
-                    var slider = $('ul#slider'),
-                        marginLeft = parseInt(slider.css('marginLeft')),
-                        liWidth = $('ul#slider li').width()  + pad,
+                    var liWidth = $('ul#slider li').width() + pad,
                         newValue;
+                    if(marginLeft === undefined){
+                        var marginLeft = parseInt(slider.css('marginLeft'));
+                    }
                     if(direction === 'left'){
-                        if(marginLeft === 0) return;
+                        if(marginLeft === 0) {
+                            slider.css({marginLeft: marginLeft});
+                            return;
+                        }
                         newValue = marginLeft + liWidth;
                     }
                     if(direction === 'right'){
-                        if((marginLeft - liWidth) <= -slider.width() + (pad * $scope.routes.length)) return;
+                        if((marginLeft - liWidth) <= -slider.width() + (pad * $scope.routes.length)) {
+                            slider.css({marginLeft: marginLeft});
+                            return;
+                        }
                         newValue = marginLeft - liWidth;
                     }
                     isAnimationInProgress = true;
