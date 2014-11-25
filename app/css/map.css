@@ -161,12 +161,18 @@ body {
     transition: 0.3s ease-out all;
 }
 .loading-bar{
-    width:100%;
-    height:100%;
+    width: 150px;
+    height: 200px;
+    line-height: 100vh;
+    display: inline-block;
 }
 .loading-bar-container{
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
     z-index: 0;
     width: 100%;
+    height: 100vh;
     position: absolute;
     top:0px;
     left:0px;

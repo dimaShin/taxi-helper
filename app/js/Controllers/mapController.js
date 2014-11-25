@@ -54,12 +54,9 @@ define(['angular', 'async!googleMapsApi'], function(){
                     function success(orders){
                         $scope.routes = $scope.routes.concat(orders);
                         $scope.markers = $scope.markers.concat(orders);
-
-                        $scope.$apply();
                     }
                 );
             };
-            console.log('check new routes: ', checkNewRoutes);
             $interval(checkNewRoutes, 1000);
             $('div#mainHeader').on('mousedown', function(){
                 $(this).removeClass('main-header-shadowed');
@@ -69,7 +66,6 @@ define(['angular', 'async!googleMapsApi'], function(){
         })($scope);
 
         function checkNewRoutes(){
-            console.log('checking for new routes: ');
             getBounds().then(
                 function success(bounds){
                     operatorService.getOrderInBounds(bounds, $scope.driverId).then(
