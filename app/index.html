@@ -10,10 +10,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.5, maximum-scale=1.5, user-scalable=no">
 </head>
 <body>
-    <ng-view></ng-view>
+    <div class="container-fluid loading-bar-container">
+        <img src="fonts/loading.gif" class="loading-bar"/>
+    </div>
+    <div class="routes-view-container">
+        <ng-view></ng-view>
+    </div>
     <audio id="incomingBell" class="audio" ng-hide="always">
         <source src="source/ring.ogg" type="audio/ogg" />
     </audio>
     <script type="text/javascript" src="js/_lib/require.js" data-main="js/init"></script>
 </body>
+<script type="text/javascript">
+</script>
 </html>

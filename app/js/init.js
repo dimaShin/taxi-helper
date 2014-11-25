@@ -46,11 +46,14 @@ requirejs.config({
         ngTouch: {
             deps: ['angular']
         }
-    }
+    },
+    waitSeconds: 0
 });
 
 require(['routes'], function(){
     console.log('init');
     angular.bootstrap(document.body, ['TaxiHelper']);
     $('.hidden').removeClass('hidden');
+    $('div.routes-view-container').css({opacity: 1});
+    $('div.loading-bar-container').remove();
 });

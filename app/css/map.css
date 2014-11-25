@@ -152,3 +152,22 @@ body {
 .pointer {
     cursor: pointer;
 }
+.routes-view-container {
+    opacity: 0;
+    z-index: 50;
+    -moz-transition: 0.3s ease-out all;
+    -o-transition: 0.3s ease-out all;
+    -webkit-transition: 0.3s ease-out all;
+    transition: 0.3s ease-out all;
+}
+.loading-bar{
+    width:100%;
+    height:100%;
+}
+.loading-bar-container{
+    z-index: 0;
+    width: 100%;
+    position: absolute;
+    top:0px;
+    left:0px;
+}
