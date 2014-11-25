@@ -22,35 +22,35 @@ define(['angular', 'async!googleMapsApi'], function(){
                 return {
                     pre: function($scope, el, attr, ctrl){
                         console.log($scope.routes);
-                        if($(window).width() < maxWidth){
-                            el.css({
-                                width: $(window).width() + 'px',
-                                left: 0
-                            })
-                        }else {
-                            el.css({
-                                width: maxWidth + 'px',
-                                left: (($(window).width() - maxWidth) / 2) + 'px'
-                            })
-                        }
+                        $scope.fitWidth(el);
                     },
                     post: function($scope, el, attr, ctrl){
 
-                        $scope.$watch(function($scope){
-                            return $scope.routes.length;
-                        }, function(){
-                            var slider = $('ul#slider'),
-                                li = $('ul#slider li');
-                            li.width(el.width() - 10);
-                            slider.width(el.width() * $scope.routes.length + (pad * $scope.routes.length)).css('marginLeft', 0);
-                        })
+                        $scope.$watch(
+                            function routesLengthWatcher($scope){
+                                return $scope.routes.length;
+                            },
+                            function(){
+                                var slider = $('ul#slider'),
+                                    li = $('ul#slider li');
+                                li.width(el.width() - 10);
+                                slider.width(el.width() * $scope.routes.length + (pad * $scope.routes.length)).css('marginLeft', 0);
+                            }
+                        );
+                        $scope.$watch(
+                            function screenWidthWatcher(){
+                                return $(window).width();
+                            },
+                            function(){
+                                $scope.fitWidth(el);
+                            }
+                        )
                     }
                 }
             },
             controller: function($scope){
                 var isAnimationInProgress = false,
                     slider = $('ul#slider');
-                console.log('swipe: ', $swipe);
                 $scope.originals = {};
                 $swipe.bind($('ul#slider'), {
                     start: function(e){
@@ -111,6 +111,22 @@ define(['angular', 'async!googleMapsApi'], function(){
 
                 $scope.cancelRoute = function(route){
                     $scope.mapCtrl.cancelRoute(route);
+                };
+
+                $scope.fitWidth = function(el){
+                    if($(window).width() < maxWidth){
+                        el.css({
+                            width: $(window).width() + 'px',
+                            left: 0
+                        })
+                    }else {
+                        el.css({
+                            width: maxWidth + 'px',
+                            left: (($(window).width() - maxWidth) / 2) + 'px'
+                        })
+                    }
+                    $('ul#slider li').width($(window).width());
+                    console.log(slider);
                 }
             }
         }

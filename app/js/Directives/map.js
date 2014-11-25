@@ -26,9 +26,9 @@ define(['angular', 'async!googleMapsApi'], function(){
                 });
                 return {
                     pre: function preLink($scope, el, attr, ctrl){
-                        var width = $(window).width(),
-                            height = $(window).height();
-                        el.width(width).height(height);
+                        //var width = $(window).width(),
+                        //    height = $(window).height();
+                        //el.width(width).height(height);
                     },
                     post: function postLink($scope, el, attr, ctrl){
 
@@ -67,7 +67,7 @@ define(['angular', 'async!googleMapsApi'], function(){
 
                         $scope.$watch(
                             function watchMarkers($scope){
-                            return $scope.markers.length;
+                                return $scope.markers.length;
                         },
                             function(newValue, oldValue){
                                 console.log('markers.length changed! ', oldValue, newValue);
@@ -123,9 +123,19 @@ define(['angular', 'async!googleMapsApi'], function(){
                                     }
                                 )
                             }
+                        );
+
+                        $scope.$watchCollection(
+                            function screenSizeWatcher(){
+                                return {
+                                    width: $(window).width(),
+                                    height: $(window).height()
+                                }
+                            },
+                            function(newValue){
+                                el.width(newValue.width).height(newValue.height);
+                            }
                         )
-
-
                     }
                 }
 
