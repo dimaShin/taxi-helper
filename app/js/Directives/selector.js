@@ -1,7 +1,7 @@
 /**
  * Created by iashind on 21.11.14.
  */
-define(['jqueryUI'], function(){
+define(['jqueryUI-touch'], function(){
 
     function selectorDirective(){
         return {

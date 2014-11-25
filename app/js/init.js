@@ -14,6 +14,7 @@ requirejs.config({
         async: '_lib/require-async',
         ngAnimate: '_lib/angular-animate',
         jqueryUI: '_lib/jquery-ui-1.11.2/jquery-ui',
+        'jqueryUI-touch' : '_lib/jquery-ui-1.11.2/jquery.ui.touch-punch.min',
         ngTouch: '_lib/angular-touch'
     },
     shim: {
@@ -38,6 +39,9 @@ requirejs.config({
         },
         jqueryUI: {
             deps: ['jquery']
+        },
+        'jqueryUI-touch': {
+            deps: ['jqueryUI']
         },
         ngTouch: {
             deps: ['angular']
