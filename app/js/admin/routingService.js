@@ -40,7 +40,6 @@ define(['app', 'async!googleMapsApi'], function(app){
                         });
                     }
                 })(i)
-
             }
             var interval = $interval(function(){
                 if(pointLatLng.from && pointLatLng.to && pointLatLng.waypoints.length === points.waypoints.length){

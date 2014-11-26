@@ -5,6 +5,7 @@ var fs = require('fs');
 app.listen(8000);
 
 function handler (req, res) {
+    //ToDo: recognizing url without file extensions
     fs.readFile(req.url.substr(1),
         function (err, data) {
             if (err) {
