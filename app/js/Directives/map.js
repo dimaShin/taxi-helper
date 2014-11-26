@@ -4,7 +4,7 @@
 'use strict';
 
 define(['angular', 'async!googleMapsApi'], function(){
-
+    console.log('map injected');
     function mapDirective(){
         var markers = [];
         return {
@@ -13,7 +13,8 @@ define(['angular', 'async!googleMapsApi'], function(){
             scope:{
                 ctrlMethods: '=methods',
                 markers: '=',
-                route: '='
+                route: '=',
+                size: '='
             },
             compile: function(){
                 var renderer = new google.maps.DirectionsRenderer(),
@@ -26,6 +27,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                 });
                 return {
                     pre: function preLink($scope, el, attr, ctrl){
+                        console.log('map pre link');
                         $scope.$watchCollection(
                             function screenSizeWatcher(){
                                 return {

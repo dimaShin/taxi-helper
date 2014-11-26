@@ -15,6 +15,11 @@ define(['app', 'directives'], function(app){
             controller: 'routesController',
             reloadOnSearch: false
         });
+        $routeProvider.when('/routes',{
+            templateUrl: '/templates/routes.html',
+            controller: 'routesController',
+            reloadOnSearch: false
+        });
 
         $routeProvider.otherwise({redirectTo: '/map'});
         $locationProvider.html5Mode(true);

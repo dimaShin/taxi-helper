@@ -3,11 +3,14 @@
  */
 'use strict';
 
-define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
+define(['app', 'socket.io-client','async!googleMapsApi', 'cacheService'], function(app, socket){
 
     function getOrderId(order){
         return order.start.toString().replace(/\D+/g, '') + order.finish.toString().replace(/\D+/g, '');
     };
+    console.log('connecting to socket: ', socket);
+    var io = socket('10.11.80.112:8000');
+
 
     app.factory('operatorService', function($interval, cacheService, positioningService){
         var allOrders = [
@@ -79,7 +82,20 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
                     );
                 }
             }, 500, allOrders.length, false);
-
+        io.on('newOrder', function(order){
+            order.start = new google.maps.LatLng(order.start.lat, order.start.lng);
+            order.end = new google.maps.LatLng(order.end.lat, order.end.lng),
+                console.log('received new order: ', order);
+            createRoute(order.start, order.end).then(
+                function success(route){
+                    order.route = route;
+                    order.start_address = getNormalizedAddress(route.routes[0].legs[0].start_address);
+                    order.end_address = getNormalizedAddress(route.routes[0].legs[0].end_address);
+                    order.distance = route.routes[0].legs[0].distance.text;
+                    newOrders.push(order);
+                }
+            );
+        });
         function getNormalizedAddress(address){
             address = address.split(',');
             address.length = 2;
@@ -225,6 +241,7 @@ define(['app', 'async!googleMapsApi', 'cacheService'], function(app){
                     suitedOffers = [];
 
                 for(var i in newOrders){
+                    //console.log('newOrder: ', newOrders[i].start);
                     if(bounds.contains(newOrders[i].start)){
                         if(-1 === canceledRoutes.indexOf(newOrders[i].id)){
                             suitedOffers.push(newOrders[i]);

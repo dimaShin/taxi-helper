@@ -15,7 +15,8 @@ requirejs.config({
         ngAnimate: '_lib/angular-animate',
         jqueryUI: '_lib/jquery-ui-1.11.2/jquery-ui',
         'jqueryUI-touch' : '_lib/jquery-ui-1.11.2/jquery.ui.touch-punch.min',
-        ngTouch: '_lib/angular-touch'
+        ngTouch: '_lib/angular-touch',
+        'socket.io-client': 'https://cdn.socket.io/socket.io-1.2.1'
     },
     shim: {
         angular: {
@@ -45,6 +46,9 @@ requirejs.config({
         },
         ngTouch: {
             deps: ['angular']
+        },
+        'socket.io-client': {
+            exports: 'socket'
         }
     },
     waitSeconds: 0

@@ -1,0 +1,34 @@
+
+.map-canvas{
+    /*padding: 10px;*/
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+.order-builder {
+    position: absolute;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 400px;
+    right: 5px;
+    top: 5px;
+    z-index: 200;
+}
+.form-group {
+    margin-bottom: 0px !important;
+}
+.hidden {
+    display: none;
+    visibility: hidden;
+}
+.app-container {
+    opacity: 0;
+    -moz-transition: 0.3s ease-out all;
+    -o-transition: 0.3s ease-out all;
+    -webkit-transition: 0.3s ease-out all;
+    transition: 0.3s ease-out all;
+}
+.delete-ico {
+    width: 20px;
+    height: 20px;
+}

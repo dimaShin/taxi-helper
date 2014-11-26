@@ -1,2 +1,5 @@
+#!/bin/sh
 cd app
-forever start ../scripts/web-server.js
+
+#forever stop  ../scripts/web-server.js
+node web-server.js
