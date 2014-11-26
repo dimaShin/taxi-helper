@@ -25,6 +25,7 @@ define(['app', 'async!googleMapsApi'], function(app){
                                     });
                                 } else {
                                     deferred.reject(status);
+                                    $interval.cancel(interval);
                                 }
                             });
                         }
@@ -34,6 +35,7 @@ define(['app', 'async!googleMapsApi'], function(app){
                                 pointLatLng[i] = results[0].geometry.location
                             } else {
                                 deferred.reject(status);
+                                $interval.cancel(interval);
                             }
                         });
                     }

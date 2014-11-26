@@ -45,7 +45,6 @@ console.log('bldController');
             };
             if(options) $.extend(defOptions, options);
 
-            $(el).width()
             return new google.maps.Map(el , defOptions);
         };
 
