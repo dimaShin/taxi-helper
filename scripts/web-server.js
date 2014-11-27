@@ -40,8 +40,14 @@ io.on('connection', function (socket) {
                 console.log('newOrder: ', data);
             });
         }
+    });
+    socket.on('disconnect', function(){
+        console.log('user disconnect');
     })
 });
-io.on('newOrder', function(socket){
-
-});
+//io.on('disconnect', function(socket){
+//    console.log('user disconnect');
+//});
+//io.on('newOrder', function(socket){
+//
+//});

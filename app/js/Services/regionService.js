@@ -46,6 +46,7 @@ define(['app', 'async!googleMapsApi'], function(app){
         ];
 
         function getRegionId(point){
+            console.log(point);
             var suitedRegions = [];
             for(var i = 0; i < regions.length; i++){
                 if(regions[i].circle.getBounds().contains(point)){

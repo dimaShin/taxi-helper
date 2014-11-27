@@ -2,7 +2,7 @@
  * Created by iashind on 26.11.14.
  */
 'use strict';
-define(['socket.io-client', 'async!googleMapsApi'], function(socket){
+define(['socket.io-client', '../Services/mapConstructor', 'async!googleMapsApi'], function(socket, MapConstructor){
 console.log('bldController');
 
     var directionService = new google.maps.DirectionsService(),
@@ -34,7 +34,9 @@ console.log('bldController');
             function(newValue, oldValue){
                 console.log('resize: ', newValue, oldValue);
                 $(mapCanvas).width(newValue.width - 4).height(newValue.height - 4);
-                map = initializeMap(mapCanvas);
+                map = new MapConstructor().initialize(mapCanvas);
+                console.log('map: ', map);
+                //map = initializeMap(mapCanvas);
             }
         );
         function initializeMap(el, options){
@@ -129,8 +131,9 @@ console.log('bldController');
                                 region: regionService.getRegionId(response.from)
                             };
                             $scope.orderDetails = 'Стоимость: ' + $scope.order.price + ' грн.';
-                            renderer.setMap(map);
-                            renderer.setDirections(route);
+                            map.renderRoute(route);
+                            //renderer.setMap(map);
+                            //renderer.setDirections(route);
                             $scope.$apply();
                             console.log('order: ', $scope.order);
                         });

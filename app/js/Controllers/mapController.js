@@ -5,7 +5,7 @@
 
 define(['angular', 'async!googleMapsApi'], function(){
 
-    function mapController($scope, operatorService, $interval, positioningService, $location){
+    function mapController($scope, operatorService, $interval, positioningService, $location, socketService){
         $scope.routes = [];
         $scope.markers= [];
         $scope.currentRoute = {};
@@ -49,12 +49,29 @@ define(['angular', 'async!googleMapsApi'], function(){
                 },
                 function(newValue){
                     if(newValue){
+                        positioningService.getCurrentPos().then(
+                            function success(position){
+                                socketService.connectDriver(position, $scope);
+                            }
+                        )
+
                         //socket.io.connect
                     }else{
+                        socketService.disconnect();
+                        //console.log('disconnect: ', ))
                         //socket.io.disconnect
                     }
                 }
-            )
+            );
+
+            //$scope.$watchCollection(
+            //    function ordersWatcher($scope){
+            //        return $scope.routes;
+            //    },
+            //    function(newValue){
+            //
+            //    }
+            //)
 
             if(window.sessionStorage && window.sessionStorage.mapState){
                 var mapState = JSON.parse(window.sessionStorage.mapState),
@@ -73,7 +90,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                     }
                 );
             };
-            $interval(checkNewRoutes, 1000);
+            //$interval(checkNewRoutes, 1000);
             $('div#mainHeader')
                 .on('mousedown', function(){
                     $(this).removeClass('main-header-shadowed');

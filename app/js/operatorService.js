@@ -9,7 +9,7 @@ define(['app', 'socket.io-client','async!googleMapsApi', 'cacheService'], functi
         return order.start.toString().replace(/\D+/g, '') + order.finish.toString().replace(/\D+/g, '');
     };
     console.log('connecting to socket: ', socket);
-    var io = socket('10.11.80.112:8000');
+    //var io = socket('10.11.80.112:8000');
 
 
     app.factory('operatorService', function($interval, cacheService, positioningService){
@@ -82,24 +82,24 @@ define(['app', 'socket.io-client','async!googleMapsApi', 'cacheService'], functi
                     );
                 }
             }, 500, allOrders.length, false);
-        io.on('newOrder', function(order){
-            order.start = new google.maps.LatLng(order.start.lat, order.start.lng);
-            order.end = new google.maps.LatLng(order.end.lat, order.end.lng),
-                console.log('received new order: ', order);
-            createRoute(order.start, order.end).then(
-                function success(route){
-                    order.route = route;
-                    order.start_address = getNormalizedAddress(route.routes[0].legs[0].start_address);
-                    order.end_address = getNormalizedAddress(route.routes[0].legs[0].end_address);
-                    order.distance = route.routes[0].legs[0].distance.text;
-                    newOrders.push(order);
-                }
-            );
-        });
-        io.on('connect', function(){
-            console.log('connect');
-            io.emit('introduce', {driver: true});
-        })
+        //io.on('newOrder', function(order){
+        //    order.start = new google.maps.LatLng(order.start.lat, order.start.lng);
+        //    order.end = new google.maps.LatLng(order.end.lat, order.end.lng),
+        //        console.log('received new order: ', order);
+        //    createRoute(order.start, order.end).then(
+        //        function success(route){
+        //            order.route = route;
+        //            order.start_address = getNormalizedAddress(route.routes[0].legs[0].start_address);
+        //            order.end_address = getNormalizedAddress(route.routes[0].legs[0].end_address);
+        //            order.distance = route.routes[0].legs[0].distance.text;
+        //            newOrders.push(order);
+        //        }
+        //    );
+        //});
+        //io.on('connect', function(){
+        //    console.log('connect');
+        //    io.emit('introduce', {driver: true});
+        //})
         function getNormalizedAddress(address){
             address = address.split(',');
             address.length = 2;
