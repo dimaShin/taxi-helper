@@ -96,6 +96,10 @@ define(['app', 'socket.io-client','async!googleMapsApi', 'cacheService'], functi
                 }
             );
         });
+        io.on('connect', function(){
+            console.log('connect');
+            io.emit('introduce', {driver: true});
+        })
         function getNormalizedAddress(address){
             address = address.split(',');
             address.length = 2;

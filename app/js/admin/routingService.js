@@ -28,7 +28,7 @@ define(['app', 'async!googleMapsApi'], function(app){
                                     $interval.cancel(interval);
                                 }
                             });
-                        }
+                          }
                     }else{
                         geocoder.geocode( { 'address': 'kharkov, ukraine, ' + points[i]}, function(results, status) {
                             if (status == google.maps.GeocoderStatus.OK) {

@@ -2,7 +2,7 @@
  * Created by iashind on 21.11.14.
  */
 'use strict';
-define(['app'], function(app){
+define(['app', 'Services/regionService'], function(app){
 
     function positioningService(){
 

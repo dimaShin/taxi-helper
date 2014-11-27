@@ -4,11 +4,16 @@
 'use strict';
 define(['socket.io-client', 'async!googleMapsApi'], function(socket){
 console.log('bldController');
+
     var directionService = new google.maps.DirectionsService(),
         renderer = new google.maps.DirectionsRenderer(),
         io = socket();
+    io.on('connect', function(){
+        io.emit('introduce', {driver: false});
+    });
     console.log(io);
-    function controller($scope, routingService){
+
+    function controller($scope, routingService, regionService){
         var mapCanvas = $('div#googleMap')[0],
             map;
 
@@ -42,10 +47,29 @@ console.log('bldController');
                 scaleControl: false,
                 streetViewControl: false,
                 overviewMapControl: false
-            };
+                }, map;
             if(options) $.extend(defOptions, options);
+            map = new google.maps.Map(el , defOptions);
+            google.maps.event.addListener(map, 'click', function(e){
+                var region = createRegion(e.latLng, 3000);
+                region.setMap(map);
+                google.maps.event.addListener(region, 'dragend', function(){
+                    console.log(region.getCenter());
+                });
+                google.maps.event.addListener(region, 'radius_changed', function(){
+                    console.log(region.getRadius());
+                });
+            });
+            return map;
+        };
 
-            return new google.maps.Map(el , defOptions);
+        function createRegion(center, radius){
+            return new google.maps.Circle({
+                center: center,
+                radius: radius,
+                draggable: true,
+                editable: true
+            });
         };
 
         function getNormalizedAddress(address){
@@ -101,7 +125,8 @@ console.log('bldController');
                                 },
                                 price: calcPrice(route.routes[0].legs[0].distance.value, $scope.isUrgent),
                                 isUrgent: $scope.isUrgent,
-                                waypoints: response.waypoints
+                                waypoints: response.waypoints,
+                                region: regionService.getRegionId(response.from)
                             };
                             $scope.orderDetails = 'Стоимость: ' + $scope.order.price + ' грн.';
                             renderer.setMap(map);
