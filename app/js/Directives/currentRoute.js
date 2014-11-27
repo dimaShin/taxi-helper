@@ -11,7 +11,8 @@ define(['angular', 'async!googleMapsApi'], function(){
             templateUrl: 'templates/currentRoute.html',
             scope: {
                 route: '=route',
-                mapCtrl: '=methods'
+                mapCtrl: '=methods',
+                inTheQueue: '='
             },
             transclude: true,
 
@@ -19,6 +20,12 @@ define(['angular', 'async!googleMapsApi'], function(){
                 $scope.completeRoute = function(){
                     $scope.mapCtrl.completeRoute();
                     //$scope.route = {};
+                }
+            },
+            controller: function($scope){
+                $scope.toggleQueue = function(){
+                    $scope.inTheQueue = !$scope.inTheQueue;
+                    //$scope.$apply();
                 }
             }
         }

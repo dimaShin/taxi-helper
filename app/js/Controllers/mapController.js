@@ -12,6 +12,7 @@ define(['angular', 'async!googleMapsApi'], function(){
         $scope.onTheRoute = false;
         $scope.radius = 2000;
         $scope.driverId = 'x1';
+        $scope.inTheQueue = false;
 
         (function initialize($scope){
             $scope.$watch(
@@ -34,12 +35,26 @@ define(['angular', 'async!googleMapsApi'], function(){
                             routes: JSON.stringify(routesId),
                             currentRoute: ($scope.currentRoute) ? $scope.currentRoute.id : null,
                             radius: $scope.radius,
-                            onTheRoute: $scope.onTheRoute
+                            onTheRoute: $scope.onTheRoute,
+                            inTheQueue: $scope.inTheQueue
                         });
                         sessionStorage.mapState = storageInstance;
                     };
                 }
             );
+
+            $scope.$watch(
+                function queueWatcher($scope){
+                    return $scope.inTheQueue;
+                },
+                function(newValue){
+                    if(newValue){
+                        //socket.io.connect
+                    }else{
+                        //socket.io.disconnect
+                    }
+                }
+            )
 
             if(window.sessionStorage && window.sessionStorage.mapState){
                 var mapState = JSON.parse(window.sessionStorage.mapState),
@@ -50,6 +65,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                     $scope.currentRoute = operatorService.getOrderById(mapState.currentRoute);
                 }
                 $scope.radius = mapState.radius;
+                $scope.inTheQueue = mapState.inTheQueue;
                 operatorService.restoreState(routesId).then(
                     function success(orders){
                         $scope.routes = $scope.routes.concat(orders);
@@ -58,11 +74,14 @@ define(['angular', 'async!googleMapsApi'], function(){
                 );
             };
             $interval(checkNewRoutes, 1000);
-            $('div#mainHeader').on('mousedown', function(){
-                $(this).removeClass('main-header-shadowed');
-            }).on('mouseup', function(){
+            $('div#mainHeader')
+                .on('mousedown', function(){
+                    $(this).removeClass('main-header-shadowed');
+                })
+                .on('mouseup', function(){
                 $(this).addClass('main-header-shadowed');
             });
+
         })($scope);
 
         function checkNewRoutes(){
