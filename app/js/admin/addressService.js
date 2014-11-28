@@ -5,7 +5,7 @@
 define(['app', 'async!googleMapsApi'], function(app){
     var directionService = new google.maps.DirectionsService(),
         geocoder = new google.maps.Geocoder();
-    app.factory('routingService', function($interval){
+    app.factory('addressService', function($interval){
         function getLatLng(points){
             var deferred = $.Deferred(),
                 pointLatLng = {
@@ -31,8 +31,9 @@ define(['app', 'async!googleMapsApi'], function(app){
                           }
                     }else{
                         geocoder.geocode( { 'address': 'kharkov, ukraine, ' + points[i]}, function(results, status) {
-                            if (status == google.maps.GeocoderStatus.OK) {
-                                pointLatLng[i] = results[0].geometry.location
+                            console.log('address: ', results);
+                            if (status == google.maps.GeocoderStatus.OK && results[0].address_components.length > 5){
+                                pointLatLng[i] = results[0].geometry.location;
                             } else {
                                 deferred.reject(status);
                                 $interval.cancel(interval);

@@ -1,6 +1,4 @@
-/**
- * Created by iashind on 21.11.14.
- */
+//Created by iashind on 21.11.14.
 'use strict';
 define(['app', 'Services/regionService', 'Services/socketService'], function(app){
 

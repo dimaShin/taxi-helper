@@ -13,6 +13,7 @@ define(['angular', 'async!googleMapsApi'], function(){
         $scope.radius = 2000;
         $scope.driverId = 'x1';
         $scope.inTheQueue = false;
+        $scope.socketClient = socketService.getDriverClient();
 
         (function initialize($scope){
             $scope.$watch(
@@ -51,11 +52,11 @@ define(['angular', 'async!googleMapsApi'], function(){
                     if(newValue){
                         positioningService.getCurrentPos().then(
                             function success(position){
-                                socketService.connectDriver(position, $scope);
+                                $scope.socketClient.connect(position, $scope);
                             }
                         );
                     }else{
-                        socketService.disconnect();
+                        $scope.socketClient.disconnect();
                         $scope.routes = [];
                     }
                 }

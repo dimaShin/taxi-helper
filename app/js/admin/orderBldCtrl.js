@@ -2,20 +2,25 @@
  * Created by iashind on 26.11.14.
  */
 'use strict';
-define(['socket.io-client', '../Services/mapConstructor', 'async!googleMapsApi'], function(socket, MapConstructor){
+define(['../Services/socketService',
+    '../Constructors/mapConstructor',
+    '../Constructors/orderConstructor',
+    'async!googleMapsApi'],
+    function(socketService, MapConstructor, OrderConstructor){
 console.log('bldController');
 
     var directionService = new google.maps.DirectionsService(),
-        renderer = new google.maps.DirectionsRenderer(),
-        io = socket();
-    io.on('connect', function(){
-        io.emit('introduce', {driver: false});
-    });
-    console.log(io);
+        renderer = new google.maps.DirectionsRenderer();
 
-    function controller($scope, routingService, regionService){
+    //io.on('connect', function(){
+    //    io.emit('introduce', {driver: false});
+    //});
+    //console.log(io);
+
+    function controller($scope, addressService, regionService, socketService){
         var mapCanvas = $('div#googleMap')[0],
-            map;
+            map,
+            socketClient = socketService.getOperatorClient().connect();
 
         $scope.waypoints = [];
         $scope.orderDetails = '';
@@ -94,53 +99,47 @@ console.log('bldController');
         $scope.calcRoute = function(){
             renderer.setMap(null);
             $scope.order = {};
-            $scope.$apply();
+            //$scope.$apply();
             if($scope.orderOptions.$invalid) {
                 console.log('invalid');
                 $scope.orderDetails = 'Ошибка заполнения данных!'
             }else{
-                console.log('rService: ', routingService)
-                routingService.getLatLng({
+                addressService.getLatLng({
                     from: $scope.orderOptions.addressFrom.$viewValue,
                     to: $scope.orderOptions.addressTo.$viewValue,
                     waypoints: $scope.waypoints
                 }).then(
                     function success(response){
-                        var routeOptions = {
-                            origin: response.from,
-                            destination: response.to,
-                            travelMode: google.maps.TravelMode['DRIVING'],
-                            unitSystem: google.maps.UnitSystem.METRIC,
-                            waypoints: response.waypoints
-
+                        var orderBasics = {
+                            start: {
+                                lat: response.from.lat(),
+                                lng: response.from.lng()
+                            },
+                            finish: {
+                                lat: response.to.lat(),
+                                lng: response.to.lng()
+                            },
+                            isUrgent: $scope.isUrgent,
+                            waypoints: []
                         };
-                        directionService.route(routeOptions, function(route, status){
-                            $scope.order = {
-                                id: getOrderId(response),
-                                start: {
-                                    lat: response.from.lat(),
-                                    lng: response.from.lng()
-                                },
-                                end: {
-                                    lat: response.to.lat(),
-                                    lng: response.to.lng()
-                                },
-                                price: calcPrice(route.routes[0].legs[0].distance.value, $scope.isUrgent),
-                                isUrgent: $scope.isUrgent,
-                                waypoints: response.waypoints,
-                                region: regionService.getRegionId(response.from)
-                            };
-                            $scope.orderDetails = 'Стоимость: ' + $scope.order.price + ' грн.';
-                            map.renderRoute(route);
-                            //renderer.setMap(map);
-                            //renderer.setDirections(route);
-                            $scope.$apply();
-                            console.log('order: ', $scope.order);
-                        });
-                        console.log('orderBldCtrl received points ', response);
+                        for(var i = 0; i < response.waypoints.length; i++){
+                            orderBasics.waypoints.push({
+                                lat: response.waypoints[i].location.lat(),
+                                lng: response.waypoints[i].location.lng()
+                            });
+                        }
+                        new OrderConstructor(orderBasics).asyncBuildRoute().then(
+                            function success(order){
+                                $scope.order = order;
+                                map.renderRoute(order.route);
+                                $scope.orderDescribe = 'Стоимость: ' + $scope.order.price + ' грн.';
+                                $scope.$apply();
+                                console.log('order: ', order);
+                            }
+                        );
                     },
                     function error(status){
-                        $scope.orderDetails = 'Ошибка составления маршрута - ' + status;
+                        $scope.orderDescribe = 'Ошибка составления маршрута - ' + status;
                         $scope.$apply();
                     }
                 )
@@ -148,7 +147,7 @@ console.log('bldController');
         };
 
         $scope.publicOrder = function(){
-            io.emit('newOrder', $scope.order);
+            socketClient.socket.emit('newOrder', $scope.order);
         }
 
     }

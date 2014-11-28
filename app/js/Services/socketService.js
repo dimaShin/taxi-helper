@@ -5,33 +5,61 @@
 define(['app', 'socket.io-client'], function(app, io){
 
     function socketService(regionService){
-        var socket;
-        function connectDriver(position, $scope){
-            console.log('connecting to the socket');
-            var region = regionService.getRegionId(position);
-            console.log('creating connection');
-            socket = io('http://10.11.80.112', {forceNew: true});
-            socket.on('connect', function(){
-                console.log('sending greetings');
-                socket.emit('introduce', {
-                    driver: true,
-                    region: region
-                })
-            });
-            socket.on('newOrder', function(order){
-                console.log('new order!!!!', order);
-                $scope.routes.push(order);
-                $scope.$apply();
-            })
-        }
 
-        function disconnect(){
-            if(socket) socket.disconnect();
+        function SocketClient(introduce){
+            this.introduce = introduce;
+        };
+
+        SocketClient.prototype.connect = function(){
+            this.socket = io('http://10.11.80.112', {forceNew: true});
+            console.log('connecting: ', arguments);
+            return this.introduce(arguments);
+        };
+
+        SocketClient.prototype.disconnect = function(){
+            if(this.socket) this.socket.disconnect();
+            return this;
+        };
+
+        function getDriverClient(){
+            function driverIntroducing(){
+                console.log('position: ', arguments);
+                var drvOpt = arguments[0],
+                    position = drvOpt[0],
+                    $scope = drvOpt[1],
+                    region = regionService.getRegionId(position),
+                    socketClient = this.socket;
+                socketClient.on('connect', function(){
+                    console.log('sending greetings');
+                    socketClient.emit('introduce', {
+                        driver: true,
+                        region: region
+                    })
+                });
+                socketClient.on('newOrder', function(order){
+                    console.log('new order!!!!', order);
+                    $scope.routes.push(order);
+                    $scope.$apply();
+                });
+                return this;
+            }
+            return new SocketClient(driverIntroducing);
+        };
+
+        function getOperatorClient(){
+            function operatorIntroducing(){
+                var socketClient = this.socket;
+                socketClient.on('connect', function(){
+                    socketClient.emit('introduce', {driver: false});
+                });
+                return this;
+            }
+            return new SocketClient(operatorIntroducing);
         }
 
         return {
-            connectDriver: connectDriver,
-            disconnect: disconnect
+            getDriverClient: getDriverClient,
+            getOperatorClient: getOperatorClient
         }
     }
 
