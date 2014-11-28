@@ -2,21 +2,23 @@
  * Created by iashind on 27.11.14.
  */
 'use strict';
-define(['app', 'socket.io-client'], function(app, socket){
+define(['app', 'socket.io-client'], function(app, io){
 
     function socketService(regionService){
-        var io;
+        var socket;
         function connectDriver(position, $scope){
             console.log('connecting to the socket');
             var region = regionService.getRegionId(position);
-            io = socket();
-            io.on('connection', function(){
-                io.emit('introduce', {
+            console.log('creating connection');
+            socket = io('http://10.11.80.112', {forceNew: true});
+            socket.on('connect', function(){
+                console.log('sending greetings');
+                socket.emit('introduce', {
                     driver: true,
                     region: region
                 })
             });
-            io.on('newOrder', function(order){
+            socket.on('newOrder', function(order){
                 console.log('new order!!!!', order);
                 $scope.routes.push(order);
                 $scope.$apply();
@@ -24,7 +26,7 @@ define(['app', 'socket.io-client'], function(app, socket){
         }
 
         function disconnect(){
-            if(io) io.disconnect();
+            if(socket) socket.disconnect();
         }
 
         return {

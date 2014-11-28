@@ -60,12 +60,20 @@ define(['async!googleMapsApi'], function(){
         }else{
             this.mainRenderer.setMap(null);
         }
+        return this;
     };
 
     function getSmthById(id, collection){
-        for(var i = 0; i < collection.length; i++){
-            if(collection[i].id === id) return collection[i];
+        if(collection.length){
+            for(var i = 0; i < collection.length; i++){
+                if(collection[i].id === id) return collection[i];
+            }
+        }else{
+            for(var i in collection){
+                if(collection.hasOwnProperty(i) && collection[i].id === id) return collection[i];
+            }
         }
+
     }
 
     function MapConstructor(){

@@ -53,13 +53,10 @@ define(['angular', 'async!googleMapsApi'], function(){
                             function success(position){
                                 socketService.connectDriver(position, $scope);
                             }
-                        )
-
-                        //socket.io.connect
+                        );
                     }else{
                         socketService.disconnect();
-                        //console.log('disconnect: ', ))
-                        //socket.io.disconnect
+                        $scope.routes = [];
                     }
                 }
             );

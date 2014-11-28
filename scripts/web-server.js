@@ -45,9 +45,3 @@ io.on('connection', function (socket) {
         console.log('user disconnect');
     })
 });
-//io.on('disconnect', function(socket){
-//    console.log('user disconnect');
-//});
-//io.on('newOrder', function(socket){
-//
-//});

@@ -66,22 +66,22 @@ define(['app', 'socket.io-client','async!googleMapsApi', 'cacheService'], functi
             ],
             newOrders = [],
             canceledRoutes = [];
-        $interval(function getNewOrder(){
-                if(allOrders.length){
-                    var order = allOrders.shift();
-                    createRoute(order.start, order.finish).then(
-                        function success(route){
-                            order.id = getOrderId(order);
-                            order.route = route;
-                            order.start_address = getNormalizedAddress(route.routes[0].legs[0].start_address);
-                            order.end_address = getNormalizedAddress(route.routes[0].legs[0].end_address);
-                            order.distance = route.routes[0].legs[0].distance.text;
-                            order.price = calcPrice(route.routes[0].legs[0].distance.value, order.isUrgent);
-                            newOrders.push(order);
-                        }
-                    );
-                }
-            }, 500, allOrders.length, false);
+        //$interval(function getNewOrder(){
+        //        if(allOrders.length){
+        //            var order = allOrders.shift();
+        //            createRoute(order.start, order.finish).then(
+        //                function success(route){
+        //                    order.id = getOrderId(order);
+        //                    order.route = route;
+        //                    order.start_address = getNormalizedAddress(route.routes[0].legs[0].start_address);
+        //                    order.end_address = getNormalizedAddress(route.routes[0].legs[0].end_address);
+        //                    order.distance = route.routes[0].legs[0].distance.text;
+        //                    order.price = calcPrice(route.routes[0].legs[0].distance.value, order.isUrgent);
+        //                    newOrders.push(order);
+        //                }
+        //            );
+        //        }
+        //    }, 500, allOrders.length, false);
         //io.on('newOrder', function(order){
         //    order.start = new google.maps.LatLng(order.start.lat, order.start.lng);
         //    order.end = new google.maps.LatLng(order.end.lat, order.end.lng),
