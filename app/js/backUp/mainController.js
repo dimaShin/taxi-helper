@@ -8,18 +8,18 @@ define(['app', 'cacheService'], function(app){
 
 
     app.controller('mainCtrl', function($scope){
-        $scope.routes = [];
+        $scope.orders = [];
         $scope.accepted = {};
         $scope.showRoute = function(route, isAdditional){
             $scope.$broadcast('mainCtrl:showRoute', route, isAdditional);
         };
         $scope.cleanRoutes = function(){
-            $scope.routes = [];
+            $scope.orders = [];
             $scope.$apply();
         };
         $scope.addRoute = function(route){
             //if(route.id === $scope.accepted.id) route.accepted = true;
-            $scope.routes.push(route);
+            $scope.orders.push(route);
             $scope.$apply();
         };
         $scope.setAccepted = function(offer){
@@ -31,9 +31,9 @@ define(['app', 'cacheService'], function(app){
         };
 
         function getRouteById(id){
-            for(var i in $scope.routes){
-                if($scope.routes[i].id === id){
-                    return $scope.routes[i];
+            for(var i in $scope.orders){
+                if($scope.orders[i].id === id){
+                    return $scope.orders[i];
                 }
             }
             return false;

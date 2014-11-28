@@ -3,8 +3,8 @@
  */
 'use strict';
 define(['../Services/socketService',
-    '../Constructors/mapConstructor',
-    '../Constructors/orderConstructor',
+    'Constructors/mapConstructor',
+    'Constructors/orderConstructor',
     'async!googleMapsApi'],
     function(socketService, MapConstructor, OrderConstructor){
 console.log('bldController');
@@ -17,7 +17,7 @@ console.log('bldController');
     //});
     //console.log(io);
 
-    function controller($scope, addressService, regionService, socketService){
+    function controller($scope, addressService, socketService){
         var mapCanvas = $('div#googleMap')[0],
             map,
             socketClient = socketService.getOperatorClient().connect();
@@ -147,7 +147,7 @@ console.log('bldController');
         };
 
         $scope.publicOrder = function(){
-            socketClient.socket.emit('newOrder', $scope.order);
+            socketClient.socket.emit('newOrder', $scope.order.basics);
         }
 
     }

@@ -12,7 +12,7 @@ define(['angular', 'async!googleMapsApi'], function(){
             restrict: 'EA',
             templateUrl: 'templates/newRoute.html',
             scope: {
-                routes: '=routes',
+                orders: '=',
                 mapCtrl: '=methods',
                 onTheRoute: '='
             },
@@ -21,20 +21,20 @@ define(['angular', 'async!googleMapsApi'], function(){
 
                 return {
                     pre: function($scope, el, attr, ctrl){
-                        console.log($scope.routes);
+                        console.log($scope.orders);
                         $scope.fitWidth(el);
                     },
                     post: function($scope, el, attr, ctrl){
 
                         $scope.$watch(
                             function routesLengthWatcher($scope){
-                                return $scope.routes.length;
+                                return $scope.orders.length;
                             },
                             function(){
                                 var slider = $('ul#slider'),
                                     li = $('ul#slider li');
                                 li.width(el.width() - 10);
-                                slider.width(el.width() * $scope.routes.length + (pad * $scope.routes.length)).css('marginLeft', 0);
+                                slider.width(el.width() * $scope.orders.length + (pad * $scope.orders.length)).css('marginLeft', 0);
                             }
                         );
                         $scope.$watch(
@@ -62,7 +62,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                     move: function(e){
                         var newMargin = $scope.originals.marginLeft - ($scope.originals.posX - e.x),
                             rightLimit = $scope.originals.width - $scope.originals.liWidth;
-                        if(newMargin > 0 || Math.abs(newMargin) + (pad * $scope.routes.length) > rightLimit) return;
+                        if(newMargin > 0 || Math.abs(newMargin) + (pad * $scope.orders.length) > rightLimit) return;
                         slider.css({
                             marginLeft: $scope.originals.marginLeft - ($scope.originals.posX - e.x)
                         });
@@ -95,7 +95,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                         newValue = marginLeft + liWidth;
                     }
                     if(direction === 'right'){
-                        if((marginLeft - liWidth) <= -slider.width() + (pad * $scope.routes.length)) {
+                        if((marginLeft - liWidth) <= -slider.width() + (pad * $scope.orders.length)) {
                             slider.css({marginLeft: marginLeft});
                             return;
                         }

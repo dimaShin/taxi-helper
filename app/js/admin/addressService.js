@@ -3,8 +3,7 @@
  */
 'use strict';
 define(['app', 'async!googleMapsApi'], function(app){
-    var directionService = new google.maps.DirectionsService(),
-        geocoder = new google.maps.Geocoder();
+    var geocoder = new google.maps.Geocoder();
     app.factory('addressService', function($interval){
         function getLatLng(points){
             var deferred = $.Deferred(),

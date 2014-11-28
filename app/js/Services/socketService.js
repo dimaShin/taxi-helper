@@ -2,7 +2,7 @@
  * Created by iashind on 27.11.14.
  */
 'use strict';
-define(['app', 'socket.io-client'], function(app, io){
+define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(app, io, orderConstructor){
 
     function socketService(regionService){
 
@@ -38,8 +38,14 @@ define(['app', 'socket.io-client'], function(app, io){
                 });
                 socketClient.on('newOrder', function(order){
                     console.log('new order!!!!', order);
-                    $scope.routes.push(order);
-                    $scope.$apply();
+                    new orderConstructor(order).asyncBuildRoute().then(
+                        function success(compliteOrder){
+                            $scope.orders.push(compliteOrder);
+                            $scope.$apply();
+                        }
+                    )
+
+
                 });
                 return this;
             }

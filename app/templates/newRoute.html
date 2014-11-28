@@ -3,11 +3,11 @@
 </div>
 <div class="container-fluid slider-frame well well-sm">
     <ul class="routes pointer slider" id="slider">
-        <li ng-repeat="route in routes" class="no-select pointer">
-            <span class="route-point container-fluid">От: {{route.start_address}}</span>
-            <span class="route-point container-fluid">До: {{route.end_address}}</span>
+        <li ng-repeat="order in orders" class="no-select pointer">
+            <span class="route-point container-fluid">От: {{order.start_address}}</span>
+            <span class="route-point container-fluid">До: {{order.end_address}}</span>
             <div class="container-fluid">
-                <span class="col-xs-6 pull-left">Расстояние: {{route.distance}}</span><span class="col-xs-6 pull-right">Стоимость: {{route.price | currency : 'грн ' : 0}}</span>
+                <span class="col-xs-6 pull-left">Расстояние: {{order.distance}}</span><span class="col-xs-6 pull-right">Стоимость: {{order.price | currency : 'грн ' : 0}}</span>
             </div>
 
             <div class="container-fluid">
