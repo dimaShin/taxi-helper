@@ -12,6 +12,7 @@ function handler (req, res) {
     }else{
         url = url.substr(1);
     }
+    //console.log(url);
     fs.readFile(url,
         function (err, data) {
             if (err) {

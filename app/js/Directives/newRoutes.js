@@ -127,7 +127,8 @@ define(['angular', 'async!googleMapsApi'], function(){
                     }
                     $('ul#slider li').width($(window).width() - pad);
                     console.log(slider);
-                }
+                };
+
             }
         }
     }

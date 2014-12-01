@@ -11,7 +11,7 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
         };
 
         SocketClient.prototype.connect = function(){
-            this.socket = io('http://10.11.80.112', {forceNew: true});
+            this.socket = io('http://localhost', {forceNew: true});
             console.log('connecting: ', arguments);
             return this.introduce(arguments);
         };

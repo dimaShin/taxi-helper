@@ -12,7 +12,7 @@ define(['angular', 'async!googleMapsApi'], function(){
             template: '<div></div>',
             scope:{
                 ctrlMethods: '=methods',
-                markers: '=',
+                orders: '=',
                 route: '=',
                 size: '='
             },
@@ -64,6 +64,9 @@ define(['angular', 'async!googleMapsApi'], function(){
                             renderer.setDirections(route);
                         }
                         $scope.$on('mapController:renderRoute', renderRoute);
+                        $scope.$on('mapCtrl:go', function(){
+                            renderer.setMap(null);
+                        });
 
                         function cleanMarkers(){
                             for(var i = markers.length - 1; i >= 0; i--){
@@ -74,22 +77,22 @@ define(['angular', 'async!googleMapsApi'], function(){
 
                         $scope.$watch(
                             function watchMarkers($scope){
-                                return $scope.markers.length;
+                                return $scope.orders.length;
                         },
                             function(newValue, oldValue){
                                 console.log('markers.length changed! ', oldValue, newValue);
                                 if(oldValue === newValue && !(newValue > 0) ) return console.log('initialize: ', oldValue);
                                 cleanMarkers();
-                                for(var i = 0; i < $scope.markers.length; i++){
+                                for(var i = 0; i < $scope.orders.length; i++){
                                     var marker = new google.maps.Marker({
-                                            position: $scope.markers[i].start,
+                                            position: $scope.orders[i].start,
                                             draggable: false,
                                             map: $scope.map
                                         });
                                         markers.push({
                                             marker: marker,
-                                            id: $scope.markers[i].id,
-                                            route: $scope.markers[i].route
+                                            id: $scope.orders[i].id,
+                                            route: $scope.orders[i].route
                                         });
                                 }
 

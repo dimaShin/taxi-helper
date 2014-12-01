@@ -1,5 +1,5 @@
 <div class="container-fluid routes-title text-center">
-    {{routes.length}} <span ng-show="routes.length > 1">Новых маршрута</span><span ng-show="routes.length === 1">Новый маршрут</span>
+    {{orders.length}} <span ng-show="orders.length > 1">Новых маршрута</span><span ng-show="orders.length === 1">Новый маршрут</span>
 </div>
 <div class="container-fluid slider-frame well well-sm">
     <ul class="routes pointer slider" id="slider">
@@ -12,11 +12,11 @@
 
             <div class="container-fluid">
                 <div class="col-xs-6 text-center">
-                    <button class="route-btn" type="button" ng-click="mapCtrl.cancelRoute(route)">Cancel</button>
-                    <button class="route-btn" type="button" ng-click="mapCtrl.go(route)" >Go</button>
+                    <button class="route-btn" type="button" ng-click="mapCtrl.cancelRoute(order)">Cancel</button>
+                    <button class="route-btn" type="button" ng-click="mapCtrl.go(order)" >Go</button>
                 </div>
                 <div class="col-xs-6 text-center">
-                    <button class="route-btn" type="button" ng-click="mapCtrl.renderRoute(route)">Маршрут</button>
+                    <button class="route-btn" type="button" ng-click="mapCtrl.renderRoute(order)">Маршрут</button>
                 </div>
             </div>
 

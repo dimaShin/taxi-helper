@@ -166,6 +166,7 @@ define(['angular', 'async!googleMapsApi'], function(){
             $scope.onTheRoute = true;
             $scope.orders = [];
             $scope.markers = [];
+            $scope.$broadcast('mapCtrl:go');
         };
 
 
