@@ -2,11 +2,12 @@
  * Created by iashind on 26.11.14.
  */
 'use strict';
-define(['../Services/socketService',
+define(['app', 'Services/socketService',
     'Constructors/mapConstructor',
     'Constructors/orderConstructor',
+    'addressService',
     'async!googleMapsApi'],
-    function(socketService, MapConstructor, OrderConstructor){
+    function(app, socketService, MapConstructor){
 console.log('bldController');
 
     var directionService = new google.maps.DirectionsService(),
@@ -17,7 +18,8 @@ console.log('bldController');
     //});
     //console.log(io);
 
-    function controller($scope, addressService, socketService){
+    function controller($scope, addressService, socketService, orderCreator){
+        console.log('orderCreator: ', orderCreator)
         var mapCanvas = $('div#googleMap')[0],
             map,
             socketClient = socketService.getOperatorClient().connect();
@@ -79,27 +81,9 @@ console.log('bldController');
             });
         };
 
-        function getNormalizedAddress(address){
-            address = address.split(',');
-            address.length = 2;
-            return address.toString();
-        };
-
-        function calcPrice(distance, isUrgent){
-            var rate = isUrgent ? 1.5 : 1;
-            distance = Math.ceil(distance / 1000);
-            return (distance < 3) ? 20 * rate : 20 + (distance - 3) * 3 * rate;
-        };
-
-        function getOrderId(order){
-            return order.from.toString().replace(/\D+/g, '') + order.to.toString().replace(/\D+/g, '');
-        };
-
-
         $scope.calcRoute = function(){
             renderer.setMap(null);
             $scope.order = {};
-            //$scope.$apply();
             if($scope.orderOptions.$invalid) {
                 console.log('invalid');
                 $scope.orderDetails = 'Ошибка заполнения данных!'
@@ -128,7 +112,7 @@ console.log('bldController');
                                 lng: response.waypoints[i].location.lng()
                             });
                         }
-                        new OrderConstructor(orderBasics).asyncBuildRoute().then(
+                        orderCreator.getOrder(orderBasics).asyncBuildRoute().then(
                             function success(order){
                                 $scope.order = order;
                                 map.renderRoute(order.route);
@@ -147,10 +131,15 @@ console.log('bldController');
         };
 
         $scope.publicOrder = function(){
-            socketClient.socket.emit('newOrder', $scope.order.basics);
+            console.log('public: ', socketClient.socket.emit('newOrder', $scope.order.basics));
+            socketClient.socket.once('message', function(message){
+                console.log('status: ', message);
+            })
+
         }
 
     }
 
-    return controller;
+    app.controller('orderBldCtrl', controller);
+    //return controller;
 })

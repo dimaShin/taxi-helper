@@ -11,7 +11,7 @@
 </div>
 <div class="container-fluid" ng-if="inTheQueue && !route.start_address">
     <div class="accepted-header" ng-click="contentVisibility = !contentVisibility">
-        В очереди
+        В очереди ID:{{ drvId }}
         <span class="glyphicon glyphicon-chevron-down pull-right" aria-hidden="true" ng-hide="contentVisibility"></span>
         <span class="glyphicon glyphicon-chevron-up pull-right" aria-hidden="true" ng-show="contentVisibility"></span>
     </div>

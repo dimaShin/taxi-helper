@@ -3,6 +3,7 @@
  */
 'use strict';
 define(['async!googleMapsApi'], function(){
+    console.log('mapConstructor');
     MapConstructor.prototype.initialize = function(el, opt){
         var defOpt = {
             zoom: 14,

@@ -3,15 +3,15 @@
  */
 'use strict';
 define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(app, io, orderConstructor){
-
-    function socketService(regionService){
+    console.log('socketService');
+    function socketService(regionService, orderCreator){
 
         function SocketClient(introduce){
             this.introduce = introduce;
         };
 
         SocketClient.prototype.connect = function(){
-            this.socket = io('http://localhost', {forceNew: true});
+            this.socket = io('http://10.11.80.118', {forceNew: true});
             console.log('connecting: ', arguments);
             return this.introduce(arguments);
         };
@@ -38,14 +38,19 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                 });
                 socketClient.on('newOrder', function(order){
                     console.log('new order!!!!', order);
-                    new orderConstructor(order).asyncBuildRoute().then(
-                        function success(compliteOrder){
-                            $scope.orders.push(compliteOrder);
+                    orderCreator.getOrder(order).asyncBuildRoute().then(
+                        function success(completeOrder){
+                            $scope.orders.push(completeOrder);
                             $scope.$apply();
                         }
                     )
 
 
+                });
+                socketClient.on('getId', function(drvId){
+                    console.log('getId: ', drvId);
+                    $scope.drvId = drvId;
+                    $scope.$apply();
                 });
                 return this;
             }

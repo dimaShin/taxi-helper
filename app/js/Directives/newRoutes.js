@@ -27,7 +27,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                     post: function($scope, el, attr, ctrl){
 
                         $scope.$watch(
-                            function routesLengthWatcher($scope){
+                            function ordersLengthWatcher($scope){
                                 return $scope.orders.length;
                             },
                             function(){

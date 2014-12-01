@@ -17,7 +17,8 @@ requirejs.config({
         //'jqueryUI-touch' : '_lib/jquery-ui-1.11.2/jquery.ui.touch-punch.min',
         //ngTouch: '_lib/angular-touch',
         'socket.io-client': 'https://cdn.socket.io/socket.io-1.2.1',
-        Constructors: '../Constructors'
+        Constructors: '../Constructors',
+        Services: '../Services'
     },
     shim: {
         angular: {
@@ -55,7 +56,7 @@ requirejs.config({
     waitSeconds: 0
 });
 
-require(['directives'], function(){
+require(['orderBldCtrl'], function(){
     console.log('init');
     angular.bootstrap(document.body, ['TaxiAdmin']);
     //$('.hidden').removeClass('hidden');

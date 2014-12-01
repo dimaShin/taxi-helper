@@ -62,15 +62,6 @@ define(['angular', 'async!googleMapsApi'], function(){
                 }
             );
 
-            //$scope.$watchCollection(
-            //    function ordersWatcher($scope){
-            //        return $scope.orders;
-            //    },
-            //    function(newValue){
-            //
-            //    }
-            //)
-
             if(window.sessionStorage && window.sessionStorage.mapState){
                 var mapState = JSON.parse(window.sessionStorage.mapState),
                     routesId = JSON.parse(mapState.routes);

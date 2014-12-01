@@ -12,7 +12,8 @@ define(['angular', 'async!googleMapsApi'], function(){
             scope: {
                 route: '=route',
                 mapCtrl: '=methods',
-                inTheQueue: '='
+                inTheQueue: '=',
+                drvId: '='
             },
             transclude: true,
 
