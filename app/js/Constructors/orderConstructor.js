@@ -12,8 +12,9 @@ define(['app', 'Services/regionService', 'async!googleMapsApi'], function(app){
             this.start = new google.maps.LatLng(basics.start.lat, basics.start.lng);
             this.finish = new google.maps.LatLng(basics.finish.lat, basics.finish.lng);
             this.id = getOrderId({start: this.start, finish:this.finish});
+            this.basics.id = this.id;
             this.basics.region = regionService.getRegionId(this.start);
-            this.basics.timestamp = new Date().getTime();
+            this.basics.timestamp = basics.timestamp || new Date().getTime();
             this.waypoints = [];
             if(basics.waypoints){
                 for(var i = 0; i < basics.waypoints.length; i++){

@@ -10,6 +10,7 @@ define(['angular', 'async!googleMapsApi'], function(){
         $scope.markers= [];
         $scope.currentRoute = {};
         $scope.onTheRoute = false;
+        $scope.waiting = false;
         $scope.radius = 2000;
         $scope.driverId = 'x1';
         $scope.inTheQueue = false;
@@ -144,18 +145,25 @@ define(['angular', 'async!googleMapsApi'], function(){
         };
 
         function completeRoute(){
-            operatorService.completeRoute($scope.currentRoute);
+            $scope.socketClient.socket.emit('competeOrder', $scope.currentRoute.basics);
             $scope.currentRoute = null;
             $scope.onTheRoute = false;
 
         };
 
-        function go(route){
+        function go(order){
             if($scope.onTheRoute) completeRoute();
-            $scope.currentRoute = route;
+            clearTimeout(order.timeout);
+            $scope.currentRoute = order;
             $scope.onTheRoute = true;
+            for(var i = $scope.orders.length - 1; i >= 0; i--){
+                if($scope.orders[i] !== order){
+                    $scope.cancelRoute($scope.orders[i]);
+                }
+            }
             $scope.orders = [];
-            $scope.markers = [];
+            order.basics.timestamp = new Date().getTime();
+            $scope.socketClient.socket.emit('acceptedOrder', order.basics);
             $scope.$broadcast('mapCtrl:go');
         };
 

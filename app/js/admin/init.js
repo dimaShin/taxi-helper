@@ -56,7 +56,7 @@ requirejs.config({
     waitSeconds: 0
 });
 
-require(['orderBldCtrl'], function(){
+require(['orderBldCtrl', 'orderSlctCtrl'], function(){
     console.log('init');
     angular.bootstrap(document.body, ['TaxiAdmin']);
     //$('.hidden').removeClass('hidden');

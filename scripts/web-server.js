@@ -39,12 +39,25 @@ io.on('connection', function (socket) {
 
     socket.on('operatorComes', function(){
         console.log("it's operator");
-        socket.on('newOrder', function (data) {
-            console.log('newOrder: ', data);
-            var rId = data.region;
+        socket.on('newOrder', function (order) {
+            console.log('newOrder: ', order);
+            var rId = order.region;
             if(!regions[rId]) regions[rId] = new Region(rId);
-            regions[rId].newOrder(data);
+            regions[rId].newOrder(order);
+            orders.push(order);
         });
+        socket.on('getOrder', function(orderId){
+            console.log('searching fo order: ', orderId);
+            var order = getSmthById(orderId, orders);
+            if(order){
+                order = order.smth;
+                console.log('found one: ', order);
+                socket.emit('orderFound', order);
+            }else{
+                console.log('no such order in: ', orders);
+                socket.emit('noSuchOrder');
+            }
+        })
     });
 
     socket.on('disconnect', function(){
@@ -64,9 +77,15 @@ Region.prototype.addDriver = function(id, socket){
         driver = new Driver(id, socket);
     region.drivers.push(driver);
     if(this.delayedOrders.length){
-        console.log('found delayed order');
-        driver.sendOrder(this.delayedOrders);
-        this.delayedOrders = [];
+        var curTime = new Date().getTime();
+        for(var i = this.delayedOrders.length - 1; i >= 0; i--){
+            if(curTime - this.delayedOrders[i].timestamp > timeout) this.delayedOrders.splice(i, 1);
+        }
+        if(this.delayedOrders.length){
+            console.log('found delayed order');
+            driver.sendOrder(this.delayedOrders);
+            this.delayedOrders = [];
+        }
     }
     socket.on('disconnect', function(){
         region.removeDriver(id);
@@ -74,6 +93,7 @@ Region.prototype.addDriver = function(id, socket){
     });
     socket.on('canceledOrder', function(order){
         var curTimestamp = new Date().getTime();
+        console.log('is order spoiled: ', curTimestamp - order.timestamp, timeout);
         if(curTimestamp - order.timestamp > timeout){
             console.log('timeout for order expired; order canceled');
             return;
@@ -82,8 +102,22 @@ Region.prototype.addDriver = function(id, socket){
         order.canceledDrivers.push(id);
         console.log('order canceled, searching new driver', order);
         region.newOrder(order);
-    })
+    });
+    socket.on('acceptedOffer', function(order){
+        var index = getSmthById(order.id, region.orders).index;
+        region.orders.splice(index, 1);
+        getSmthById(order.id, orders).smth.accepted = id;
+    });
+    socket.on('completeOrder', function(order){
+        getSmthById(order.id, orders).smth.complete = id;
+    });
 };
+
+function getSmthById(id, collection){
+    for(var i in collection){
+        if(collection.hasOwnProperty(i) && collection[i] === id) return {index: i, smth: collection[i]}
+    }
+}
 
 Region.prototype.removeDriver = function(id){
     for(var i = 0; i < this.drivers.length; i++){

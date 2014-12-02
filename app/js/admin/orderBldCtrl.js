@@ -23,7 +23,7 @@ console.log('bldController');
         var mapCanvas = $('div#googleMap')[0],
             map,
             socketClient = socketService.getOperatorClient().connect();
-
+        $scope.socketClient = socketClient; //ToDo socketClient rename to $scope.SocketClient
         $scope.waypoints = [];
         $scope.orderDetails = '';
         $scope.order = {};
@@ -132,6 +132,7 @@ console.log('bldController');
 
         $scope.publicOrder = function(){
             console.log('public: ', socketClient.socket.emit('newOrder', $scope.order.basics));
+            $scope.order.basics.timestamp = new Date().getTime();
             socketClient.socket.once('message', function(message){
                 console.log('status: ', message);
             })

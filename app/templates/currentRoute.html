@@ -6,7 +6,8 @@
     </div>
     <div class="accepted-content" ng-show="contentVisibility">
         <span class="route-point">До: {{route.end_address}} ({{route.distance}})</span><br />
-        <button class="route-btn" type="button" ng-click="completeRoute()">Выполнен</button>
+        <button class="route-btn" type="button" ng-click="completeRoute()" ng-show="waiting">Выполнен</button>
+        <button class="route-btn" type="button" ng-click="waiting = !waiting;" ng-hide="waiting">На месте</button>
     </div>
 </div>
 <div class="container-fluid" ng-if="inTheQueue && !route.start_address">

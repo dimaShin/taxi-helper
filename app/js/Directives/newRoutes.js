@@ -46,7 +46,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                             function(newValue, oldValue){
                                 console.log('new order detected ', newValue, oldValue);
                                 for(var i = 0; i < newValue.length; i++){
-                                    if(!newValue.timeout){
+                                    if(!newValue[i].timeout){
                                         (function(order){
                                             console.log('setting timeout');
                                             order.timeout = setTimeout(function(){
