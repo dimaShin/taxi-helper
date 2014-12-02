@@ -11,7 +11,7 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
         };
 
         SocketClient.prototype.connect = function(){
-            this.socket = io('http://10.11.80.118', {forceNew: true});
+            this.socket = io('http://10.11.80.64', {forceNew: true});
             console.log('connecting: ', arguments);
             return this.introduce(arguments);
         };
@@ -31,19 +31,35 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                     socketClient = this.socket;
                 socketClient.on('connect', function(){
                     console.log('sending greetings');
-                    socketClient.emit('introduce', {
-                        driver: true,
-                        region: region
-                    })
+                    socketClient.emit('driverComes',  region);
                 });
                 socketClient.on('newOrder', function(order){
                     console.log('new order!!!!', order);
-                    orderCreator.getOrder(order).asyncBuildRoute().then(
-                        function success(completeOrder){
-                            $scope.orders.push(completeOrder);
-                            $scope.$apply();
+                    if(order.length){
+                        var length = order.length;
+                        for(var i = 0; i < order.length; i++){
+                            orderCreator.getOrder(order[i]).asyncBuildRoute().then(
+                                function success(completeOrder){
+                                    $scope.orders.push(completeOrder);
+                                    length--;
+                                }
+                            )
                         }
-                    )
+                        var interval = setInterval(function(){
+                            if(!length){
+                                $scope.$apply();
+                                clearInterval(interval);
+                            }
+                        }, 100);
+                    }else{
+                        orderCreator.getOrder(order).asyncBuildRoute().then(
+                            function success(completeOrder){
+                                $scope.orders.push(completeOrder);
+                                $scope.$apply();
+                            }
+                        )
+                    }
+
 
 
                 });
@@ -61,7 +77,7 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
             function operatorIntroducing(){
                 var socketClient = this.socket;
                 socketClient.on('connect', function(){
-                    socketClient.emit('introduce', {driver: false});
+                    socketClient.emit('operatorComes');
                 });
                 return this;
             }

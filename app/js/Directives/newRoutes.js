@@ -18,7 +18,7 @@ define(['angular', 'async!googleMapsApi'], function(){
             },
             transclude: true,
             compile: function(){
-
+                var driverTimeOut = 60000;
                 return {
                     pre: function($scope, el, attr, ctrl){
                         console.log($scope.orders);
@@ -35,6 +35,27 @@ define(['angular', 'async!googleMapsApi'], function(){
                                     li = $('ul#slider li');
                                 li.width(el.width() - 10);
                                 slider.width(el.width() * $scope.orders.length + (pad * $scope.orders.length)).css('marginLeft', 0);
+
+                            }
+                        );
+
+                        $scope.$watchCollection(
+                            function ordersWatcher($scope){
+                                return $scope.orders;
+                            },
+                            function(newValue, oldValue){
+                                console.log('new order detected ', newValue, oldValue);
+                                for(var i = 0; i < newValue.length; i++){
+                                    if(!newValue.timeout){
+                                        (function(order){
+                                            console.log('setting timeout');
+                                            order.timeout = setTimeout(function(){
+                                                console.log('timeout expired, canceling order');
+                                                $scope.mapCtrl.cancelRoute(order);
+                                            }, driverTimeOut)
+                                        })(newValue[i])
+                                    }
+                                }
                             }
                         );
                         $scope.$watch(
@@ -109,8 +130,8 @@ define(['angular', 'async!googleMapsApi'], function(){
                     });
                 };
 
-                $scope.cancelRoute = function(route){
-                    $scope.mapCtrl.cancelRoute(route);
+                $scope.cancelRoute = function(order){
+                    $scope.mapCtrl.cancelRoute(order);
                 };
 
                 $scope.fitWidth = function(el){

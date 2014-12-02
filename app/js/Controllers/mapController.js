@@ -135,13 +135,12 @@ define(['angular', 'async!googleMapsApi'], function(){
             $scope.$broadcast('mapController:renderRoute', route);
         };
 
-        function cancelRoute(route){
-            var index = $scope.orders.indexOf(route);
-
+        function cancelRoute(order){
+            var index = $scope.orders.indexOf(order);
             $scope.orders.splice(index, 1);
-            $scope.markers.splice(index, 1);
-            operatorService.cancelRoute(route);
-            console.log('route canceled');
+            $scope.socketClient.socket.emit('canceledOrder', order.basics);
+            clearTimeout(order.timeout);
+            $scope.$apply();
         };
 
         function completeRoute(){
