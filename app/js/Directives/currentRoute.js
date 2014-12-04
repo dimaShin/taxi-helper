@@ -10,7 +10,7 @@ define(['angular', 'async!googleMapsApi'], function(){
             restrict: 'EA',
             templateUrl: 'templates/currentRoute.html',
             scope: {
-                route: '=route',
+                order: '=route',
                 mapCtrl: '=methods',
                 inTheQueue: '=',
                 drvId: '='
@@ -21,6 +21,9 @@ define(['angular', 'async!googleMapsApi'], function(){
                 $scope.completeRoute = function(){
                     $scope.mapCtrl.completeRoute();
                     //$scope.route = {};
+                };
+                $scope.arrived = function(){
+                    $scope.mapCtrl.arrived($scope.order);
                 }
             },
             controller: function($scope){
@@ -33,5 +36,4 @@ define(['angular', 'async!googleMapsApi'], function(){
     }
 
     return currentRouteDirective;
-
 })

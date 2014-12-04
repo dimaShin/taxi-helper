@@ -8,9 +8,6 @@ define(['app', 'socket.io-client','async!googleMapsApi', 'cacheService'], functi
     function getOrderId(order){
         return order.start.toString().replace(/\D+/g, '') + order.finish.toString().replace(/\D+/g, '');
     };
-    console.log('connecting to socket: ', socket);
-    //var io = socket('10.11.80.112:8000');
-
 
     app.factory('operatorService', function($interval, cacheService, positioningService){
         var allOrders = [
@@ -123,10 +120,8 @@ define(['app', 'socket.io-client','async!googleMapsApi', 'cacheService'], functi
                 deferred = $.Deferred();
             directionsService.route(routeOptions, function(response, status){
                 if(status == google.maps.DirectionsStatus.OK){
-                    console.log('routing complete: ', response);
                     deferred.resolve(response);
                 }else{
-                    console.log('directionsService fail: ', status);
                     deferred.reject(status);
                 }
             });

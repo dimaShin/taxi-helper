@@ -177,3 +177,16 @@ body {
     top:0px;
     left:0px;
 }
+.slide-up-animation{
+    -moz-transition: 0.5s ease-out all;
+    -o-transition: 0.5s ease-out all;
+    -webkit-transition: 0.5s ease-out all;
+    transition: 0.5s ease-out all;
+}
+
+.slide-up-animation.ng-enter.ng-enter-active{
+    opacity: 1;
+}
+.slide-up-animation.ng-leave.ng-leave-active{
+    opacity: 0;
+}

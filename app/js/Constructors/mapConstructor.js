@@ -3,7 +3,6 @@
  */
 'use strict';
 define(['async!googleMapsApi'], function(){
-    console.log('mapConstructor');
     MapConstructor.prototype.initialize = function(el, opt){
         var defOpt = {
             zoom: 14,
@@ -18,6 +17,18 @@ define(['async!googleMapsApi'], function(){
         if(opt) $.extend(defOpt, opt);
         this.map = new google.maps.Map(el , defOpt);
         return this;
+    };
+
+    MapConstructor.prototype.setOptions = function(options){
+        this.map.setOptions(options);
+    }
+
+    MapConstructor.prototype.removeListener = function(event){
+        if(this.map) google.maps.event.clearListeners(this.map, event);
+    }
+
+    MapConstructor.prototype.addListener = function(event, action){
+        if(this.map) google.maps.event.addListener(this.map, event, action);
     };
 
     MapConstructor.prototype.renderRoute = function(route, opt, rendererId){

@@ -8,7 +8,6 @@ define(['app', 'Services/socketService',
     'addressService',
     'async!googleMapsApi'],
     function(app, socketService, MapConstructor){
-console.log('bldController');
 
     var directionService = new google.maps.DirectionsService(),
         renderer = new google.maps.DirectionsRenderer();
@@ -19,7 +18,6 @@ console.log('bldController');
     //console.log(io);
 
     function controller($scope, addressService, socketService, orderCreator){
-        console.log('orderCreator: ', orderCreator)
         var mapCanvas = $('div#googleMap')[0],
             map,
             socketClient = socketService.getOperatorClient().connect();
@@ -30,7 +28,6 @@ console.log('bldController');
 
         $scope.addressFrom = 'Московский 142';
         $scope.addressTo = 'сумская 1';
-
         $scope.$watchCollection(
             function windowResize(){
                 return {
@@ -39,10 +36,8 @@ console.log('bldController');
                 }
             },
             function(newValue, oldValue){
-                console.log('resize: ', newValue, oldValue);
                 $(mapCanvas).width(newValue.width - 4).height(newValue.height - 4);
                 map = new MapConstructor().initialize(mapCanvas);
-                console.log('map: ', map);
                 //map = initializeMap(mapCanvas);
             }
         );
@@ -63,10 +58,8 @@ console.log('bldController');
                 var region = createRegion(e.latLng, 3000);
                 region.setMap(map);
                 google.maps.event.addListener(region, 'dragend', function(){
-                    console.log(region.getCenter());
                 });
                 google.maps.event.addListener(region, 'radius_changed', function(){
-                    console.log(region.getRadius());
                 });
             });
             return map;
@@ -85,8 +78,8 @@ console.log('bldController');
             renderer.setMap(null);
             $scope.order = {};
             if($scope.orderOptions.$invalid) {
-                console.log('invalid');
                 $scope.orderDetails = 'Ошибка заполнения данных!'
+            }else if(0){
             }else{
                 addressService.getLatLng({
                     from: $scope.orderOptions.addressFrom.$viewValue,
@@ -114,11 +107,16 @@ console.log('bldController');
                         }
                         orderCreator.getOrder(orderBasics).asyncBuildRoute().then(
                             function success(order){
+                                order.basics.originals = {
+                                    start: $scope.orderOptions.addressFrom.$viewValue,
+                                    finish: $scope.orderOptions.addressTo.$viewValue,
+                                    waypoints: $scope.waypoints
+                                };
                                 $scope.order = order;
+
                                 map.renderRoute(order.route);
                                 $scope.orderDescribe = 'Стоимость: ' + $scope.order.price + ' грн.';
                                 $scope.$apply();
-                                console.log('order: ', order);
                             }
                         );
                     },
@@ -131,12 +129,29 @@ console.log('bldController');
         };
 
         $scope.publicOrder = function(){
-            console.log('public: ', socketClient.socket.emit('newOrder', $scope.order.basics));
             $scope.order.basics.timestamp = new Date().getTime();
+            socketClient.socket.emit('newOrder', $scope.order.basics);
+
             socketClient.socket.once('message', function(message){
-                console.log('status: ', message);
             })
 
+        };
+
+        $scope.pointOnMap = function(point){
+            map.setOptions({
+                draggableCursor: 'crosshair'
+            });
+            map.addListener('click', function(e){
+                map.setOptions({
+                    draggableCursor: 'move'
+                });
+                $scope[point.$name] = e.latLng.toString();
+                console.log('name: ', point.$name, $scope[point.$name]);
+                point.$setViewValue(e.latLng.toString());
+                point.$render();
+                map.removeListener('click');
+            });
+            console.log(point, map);
         }
 
     }

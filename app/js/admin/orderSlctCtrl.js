@@ -2,18 +2,17 @@
  * Created by iashind on 02.12.14.
  */
 'use strict';
-define(['app'], function(app){
-    function orderSlctCtrl($scope){
-        console.log('selectCtrl: ', $scope);
+define(['app', 'Services/ordStatusService'], function(app){
+    function orderSlctCtrl($scope, ordStatusService){
         $scope.orders = [];
         $scope.searchOrders = function(orderId){
-            console.log('search for: ', orderId);
+            $scope.orders = [];
             $scope.socketClient.socket.emit('getOrder', orderId);
         };
 
-        $scope.socketClient.socket.on('foundOrder', function(order){
-            console.log('found order: ', $scope.orders);
-            $scope.orders.push(order);
+        $scope.socketClient.socket.on('orderFound', function(order){
+            order.originals.status = ordStatusService.getStatus(order.status);
+            $scope.orders.push(order.originals);
             $scope.$apply();
         })
 

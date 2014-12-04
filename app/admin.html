@@ -14,33 +14,40 @@
 </div>
 <div class="app-container">
     <div ng-controller="orderBldCtrl" class="workplace">
-        <div class="container order-builder" >
+        <div class="container order-builder">
             <form role="form" name="orderOptions">
-                <div class="form-group">
-                    <span>От</span><input type="text" class="form-control" placeholder="Адрес от" name="addressFrom" ng-model="addressFrom" required>
+                <div class="form-group container-fluid">
+                    <span class="col-lg-1">От</span>
+                    <input type="text" class="form-control col-lg-8" placeholder="Адрес от" name="addressFrom" ng-model="addressFrom" required>
+                    <a href="javascript:;" class="col-lg-1" ng-click="pointOnMap(orderOptions.addressFrom)"><img src="img/icon-map.png" class="icon-map" /> </a>
                 </div>
-                <div class="form-group">
-                    <span>До</span>
-                    <input type="text" class="form-control" placeholder="Адрес до" name="addressTo" ng-model="addressTo" required>
+                <div class="form-group container-fluid">
+                    <span class="col-lg-1">До</span>
+                    <input type="text" class="form-control col-lg-8" placeholder="Адрес до" name="addressTo" ng-model="addressTo" required>
+                    <a href="javascript:;" class="col-lg-1" ng-click="pointOnMap(orderOptions.addressTo)"><img src="img/icon-map.png" class="icon-map" /> </a>
                 </div>
-                <div class="form-group" ng-repeat="point in waypoints" ng-if="waypoints.length">
-                    <span>Через</span>
-                    <input type="text" class="form-control" placeholder="Через" ng-model=point.value name={{ $index }} required>
+                <div class="form-group container-fluid" ng-repeat="point in waypoints" ng-if="waypoints.length">
+                    <span class="col-lg-1">Через</span>
+                    <input type="text" class="form-control col-lg-8" placeholder="Через" ng-model=point.value name={{ $index }} required>
+                    <!--<a href="javascript:;" class="col-lg-1" ng-click="pointOnMap(point)"><img src="img/icon-map.png" class="icon-map" /> </a>-->
                     <img src="img/delete.png" ng-click="waypoints.splice($index, 1)" class="delete-ico">
                 </div>
-                <a href="javascript:;" ng-click="waypoints.push({id:'id' + waypoints.length})">Добавить точку через</a>
-                <p class="help-block" ng-if="waypoints.length">Возможен некорректный просчет маршрута.</p>
                 <div class="row">
-                    <div class="order-details">
-                        {{ orderDescribe }}
-                    </div>
-                    <div class="pull-right">
-                        <input type="checkbox" name="isUrgent" ng-model="isUrgent"><span>Срочный!</span>
-                        <button type="button" class="btn btn-default" ng-click="calcRoute()">Рассчитать маршрут</button>
-                        <button type="button" class="btn btn-default" ng-click="publicOrder()" ng-disabled="!order.id">Поставить в очередь</button>
-                    </div>
+                    <a href="javascript:;" ng-click="waypoints.push({id:'id' + waypoints.length})">Добавить точку через</a>
+                    <p class="help-block" ng-if="waypoints.length">Возможен некорректный просчет маршрута.</p>
+                    <div class="row">
+                        <div class="order-details">
+                            {{ orderDescribe }}
+                        </div>
+                        <div class="pull-right">
+                            <input type="checkbox" name="isUrgent" ng-model="isUrgent"><span>Срочный!</span>
+                            <button type="button" class="btn btn-default" ng-click="calcRoute()">Рассчитать маршрут</button>
+                            <button type="button" class="btn btn-default" ng-click="publicOrder()" ng-disabled="!order.id">Поставить в очередь</button>
+                        </div>
 
+                    </div>
                 </div>
+
             </form>
         </div>
         <div class="container orders-list-container pull-right" ng-controller="orderSlctCtrl">
@@ -50,14 +57,9 @@
             </div>
             <div ng-if="orders.length" class="slide-down-animation">
                 <ul class="orders-list">
-                    <li ng-repeat="order in orders">Старт: {{ order.start }}
-                        / Конец: {{ order.finish }}
-                        / Статус:
-                        <div ng-if="order.accepted">{{ order.accepted }}
-                            <span ng-if="order.complete"> Доставлен</span>
-                            <span ng-if="!order.complete"> В пути</span>
-                        </div>
-                        <div ng-if="!order.accepted">В очереди</div>
+                    <li ng-repeat="order in orders">Старт: {{ order.start }}<br />
+                        Конец: {{ order.finish }}<br />
+                        Статус: {{ order.status }}
                     </li>
                 </ul>
             </div>

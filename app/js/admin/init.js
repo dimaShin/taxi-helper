@@ -57,7 +57,6 @@ requirejs.config({
 });
 
 require(['orderBldCtrl', 'orderSlctCtrl'], function(){
-    console.log('init');
     angular.bootstrap(document.body, ['TaxiAdmin']);
     //$('.hidden').removeClass('hidden');
     $('div.app-container').css({opacity: 1});

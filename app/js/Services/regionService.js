@@ -3,7 +3,6 @@
  */
 'use strict';
 define(['app', 'async!googleMapsApi'], function(app){
-    console.log('regionService');
     function service(){
         var regions = [
             {
@@ -46,7 +45,6 @@ define(['app', 'async!googleMapsApi'], function(app){
         ];
 
         function getRegionId(point){
-            console.log('regionService-point: ', point);
             var suitedRegions = [];
             for(var i = 0; i < regions.length; i++){
                 if(regions[i].circle.getBounds().contains(point)){
@@ -54,10 +52,9 @@ define(['app', 'async!googleMapsApi'], function(app){
                 }
             }
             if(suitedRegions.length === 1){
-                console.log('regionsService: suitedRegion: ', suitedRegions[0]);
                 return suitedRegions[0].id;
             }else{
-                console.log('1+ suited regions');
+                //ToDo +1 suited region
             }
         };
 

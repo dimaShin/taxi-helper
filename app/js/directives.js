@@ -8,7 +8,6 @@ define(['app', 'Directives/currentRoute',
     'Directives/selector',
     'Directives/results',
     'controllers'], function(app, currentRouteDirective, newRoutesDirective, mapDirective, selectorDirective, resultsDiresctive){
-    console.log('directives');
     app.directive('currentRoute', currentRouteDirective)
         .directive('newRoutes', newRoutesDirective)
         .directive('googleMap', mapDirective)

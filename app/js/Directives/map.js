@@ -4,7 +4,6 @@
 'use strict';
 
 define(['angular', 'async!googleMapsApi'], function(){
-    console.log('map injected');
     function mapDirective(){
         var markers = [];
         return {
@@ -27,7 +26,6 @@ define(['angular', 'async!googleMapsApi'], function(){
                 });
                 return {
                     pre: function preLink($scope, el, attr, ctrl){
-                        console.log('map pre link');
                         $scope.$watchCollection(
                             function screenSizeWatcher(){
                                 return {
@@ -37,7 +35,6 @@ define(['angular', 'async!googleMapsApi'], function(){
                             },
                             function(newValue){
                                 el.width(newValue.width).height(newValue.height);
-                                console.log('window resized: ', el.width(), el.height())
                                 $scope.map = $scope.initializeMap(el[0], {zoom:13});
                                 google.maps.event.addListener($scope.map, 'click', function(e){
                                     console.log(e);
@@ -80,8 +77,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                                 return $scope.orders.length;
                         },
                             function(newValue, oldValue){
-                                console.log('markers.length changed! ', oldValue, newValue);
-                                if(oldValue === newValue && !(newValue > 0) ) return console.log('initialize: ', oldValue);
+                                if(oldValue === newValue && !(newValue > 0) ) return console.log('initialize markers watcher: ', oldValue);
                                 cleanMarkers();
                                 for(var i = 0; i < $scope.orders.length; i++){
                                     var marker = new google.maps.Marker({
@@ -104,7 +100,6 @@ define(['angular', 'async!googleMapsApi'], function(){
                                 return $scope.route;
                             },
                             function(newValue, oldValue){
-                                console.log('current route detected: ', $scope.route);
                                 if(!newValue || !newValue.id) {
                                     currentRouteRenderer.setMap(null);
                                     return
@@ -143,7 +138,6 @@ define(['angular', 'async!googleMapsApi'], function(){
             controller: function($scope){
 
                 $scope.initializeMap = function(el, options){
-                    console.log('window width: ', $(el).width(), $(el).height());
                     var defOptions = {
                         zoom: 14,
                         center: new google.maps.LatLng(49.9672102, 36.3162887),

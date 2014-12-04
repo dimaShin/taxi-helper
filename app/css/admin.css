@@ -50,3 +50,15 @@
     padding: 5px;
     border-radius: 5px;
 }
+.form-control {
+    width: 70% !important;
+}
+.form-group {
+    float: left !important;
+    width: 100% !important;
+}
+.icon-map {
+    width: 30px;
+    height: 30px;
+    margin-top: -5px;
+}

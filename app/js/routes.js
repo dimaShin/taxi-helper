@@ -3,7 +3,6 @@
  */
 'use strict';
 define(['app', 'directives'], function(app){
-    console.log('routes');
     app.config(function($routeProvider, $locationProvider) {
         $routeProvider.when('/map',{
             templateUrl: '/templates/map.html',

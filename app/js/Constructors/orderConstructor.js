@@ -4,7 +4,6 @@
 'use strict';
 
 define(['app', 'Services/regionService', 'async!googleMapsApi'], function(app){
-    console.log('orderConstructor: ', app);
 
     function orderCreator(regionService){
 
@@ -40,14 +39,12 @@ define(['app', 'Services/regionService', 'async!googleMapsApi'], function(app){
         };
 
         function calcPrice(distance, isUrgent){
-            console.log('calculation price: ', distance);
             var rate = isUrgent ? 1.5 : 1;
             distance = Math.ceil(distance / 1000);
             return (distance < 3) ? 20 * rate : 20 + (distance - 3) * 3 * rate;
         };
 
         function getOrderId(order){
-            console.log('get id from: ', order);
             return order.start.toString().replace(/\D+/g, '') + order.finish.toString().replace(/\D+/g, '');
         };
 
@@ -69,7 +66,6 @@ define(['app', 'Services/regionService', 'async!googleMapsApi'], function(app){
             if(opt) $.extend(defOpt, opt);
             directionsService.route(defOpt, function(response){
                 var lastLeg = response.routes[0].legs.length - 1;
-                console.log('response: ', response, defOpt);
                 order.route = response;
                 order.start_address = getNormalizedAddress(response.routes[0].legs[0].start_address);
                 order.end_address = getNormalizedAddress(response.routes[0].legs[lastLeg].end_address);
@@ -85,7 +81,6 @@ define(['app', 'Services/regionService', 'async!googleMapsApi'], function(app){
             for(var i = 1; i < route.legs.length; i++){
                 distance += route.legs[i].distance.value;
             }
-            console.log(distance);
             if(isInt) {
                 return distance;
             }else{

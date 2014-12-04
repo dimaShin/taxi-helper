@@ -3,16 +3,16 @@
  */
 'use strict';
 define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(app, io, orderConstructor){
-    console.log('socketService');
     function socketService(regionService, orderCreator){
-
+        var socket;
+        var $scope;
         function SocketClient(introduce){
             this.introduce = introduce;
         };
 
         SocketClient.prototype.connect = function(){
-            this.socket = io('http://10.11.80.64', {forceNew: true});
-            console.log('connecting: ', arguments);
+
+            this.socket = io('/', {forceNew: true});
             return this.introduce(arguments);
         };
 
@@ -21,20 +21,31 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
             return this;
         };
 
+        SocketClient.prototype.updateScope = function(scope){
+            $scope = scope;
+        };
+
         function getDriverClient(){
+            console.log('get socketClient ', socket);
+            if(socket) {
+                console.log('app already connected');
+                return socket;
+            }
             function driverIntroducing(){
-                console.log('position: ', arguments);
+
                 var drvOpt = arguments[0],
                     position = drvOpt[0],
-                    $scope = drvOpt[1],
                     region = regionService.getRegionId(position),
                     socketClient = this.socket;
+
+                $scope = drvOpt[1];
                 socketClient.on('connect', function(){
-                    console.log('sending greetings');
-                    socketClient.emit('driverComes',  region);
+                    var clientId;// = ipCookie('clientId');
+                    socketClient.emit('driverComes',  region, clientId);
                 });
+
                 socketClient.on('newOrder', function(order){
-                    console.log('new order!!!!', order);
+                    console.log('new order: ', order);
                     if(order.length){
                         var length = order.length;
                         for(var i = 0; i < order.length; i++){
@@ -47,30 +58,37 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                         }
                         var interval = setInterval(function(){
                             if(!length){
-                                $scope.$apply();
+                                this.$scope.$apply();
                                 clearInterval(interval);
                             }
                         }, 100);
                     }else{
+                        console.log('creating order from basics');
                         orderCreator.getOrder(order).asyncBuildRoute().then(
                             function success(completeOrder){
                                 $scope.orders.push(completeOrder);
+                                $scope.$broadcast()
+                                console.log('order created: ', completeOrder, $scope.orders);
                                 $scope.$apply();
+                            },
+                            function error(){
+                                console.log('order creator error');
                             }
                         )
                     }
-
-
-
                 });
                 socketClient.on('getId', function(drvId){
-                    console.log('getId: ', drvId);
                     $scope.drvId = drvId;
+                    //ipCookie('clientId', drvId);
                     $scope.$apply();
                 });
+                socketClient.on('restoreState', function(driver){
+                })
                 return this;
             }
-            return new SocketClient(driverIntroducing);
+            socket = new SocketClient(driverIntroducing);
+            console.log('socket created', socket);
+            return socket;
         };
 
         function getOperatorClient(){

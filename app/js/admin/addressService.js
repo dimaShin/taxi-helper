@@ -29,15 +29,24 @@ define(['app', 'async!googleMapsApi'], function(app){
                             });
                           }
                     }else{
-                        geocoder.geocode( { 'address': 'kharkov, ukraine, ' + points[i]}, function(results, status) {
-                            console.log('address: ', results);
-                            if (status == google.maps.GeocoderStatus.OK && results[0].address_components.length > 5){
-                                pointLatLng[i] = results[0].geometry.location;
-                            } else {
-                                deferred.reject(status);
-                                $interval.cancel(interval);
-                            }
-                        });
+                        if(points[i][0] === '('){
+                            var latLng = points[i].replace(/[\(\)\s]/g, '').split(','),
+                                lat = latLng[0],
+                                lng = latLng[1];
+
+                            pointLatLng[i] = new google.maps.LatLng(lat, lng);
+                            console.log('lat/lng: ', pointLatLng[i]);
+                        }else{
+                            geocoder.geocode( { 'address': 'kharkov, ukraine, ' + points[i]}, function(results, status) {
+                                if (status == google.maps.GeocoderStatus.OK && results[0].address_components.length > 5){
+                                    pointLatLng[i] = results[0].geometry.location;
+                                } else {
+                                    deferred.reject(status);
+                                    $interval.cancel(interval);
+                                }
+                            });
+                        }
+
                     }
                 })(i)
             }
@@ -50,8 +59,13 @@ define(['app', 'async!googleMapsApi'], function(app){
             return deferred.promise();
         }
 
+        function getAddress(points){
+
+        }
+
         return {
-            getLatLng: getLatLng
+            getLatLng: getLatLng,
+            getAddress: getAddress
         }
     })
 })

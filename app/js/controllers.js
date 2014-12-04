@@ -3,7 +3,6 @@
  */
 'use strict';
 define(['app', 'Controllers/mapController', 'Controllers/routesController', 'operatorService'], function(app, mapController, routesController){
-    console.log('controllers');
     app.controller('mapController', mapController)
         .controller('routesController', routesController);
 

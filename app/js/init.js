@@ -7,6 +7,8 @@ requirejs.config({
         angular: '_lib/angular.min.1.3.2',
         bootstrap: '_lib/bootstrap',
         ngRoute: '_lib/angular-route.min.1.3.2',
+        ngCookies: '_lib/angular-cookies',
+        ipCookies: '_lib/ipCookies',
         ngModalService: '_lib/ng-modal-service',
         underscore: '_lib/underscore.min',
         jquery: '_lib/jquery',
@@ -51,13 +53,18 @@ requirejs.config({
         },
         'socket.io-client': {
             exports: 'socket'
+        },
+        ngCookies: {
+            deps: ['angular']
+        },
+        ipCookies: {
+            deps: ['angular']
         }
     },
     waitSeconds: 0
 });
 
 require(['routes'], function(){
-    console.log('init');
     angular.bootstrap(document.body, ['TaxiHelper']);
     $('.hidden').removeClass('hidden');
     $('div.routes-view-container').css({opacity: 1});
