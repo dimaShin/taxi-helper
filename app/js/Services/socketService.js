@@ -3,7 +3,7 @@
  */
 'use strict';
 define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(app, io, orderConstructor){
-    function socketService(regionService, orderCreator){
+    function socketService(regionService, orderCreator, $interval){
         var socket;
         var $scope;
         function SocketClient(introduce){
@@ -23,6 +23,11 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
 
         SocketClient.prototype.updateScope = function(scope){
             $scope = scope;
+        };
+
+        SocketClient.prototype.updateRegion = function(point){
+            var regionId = regionService.getRegionId(point);
+            if(regionId) this.socket.emit('updateRegion', regionId);
         };
 
         function getDriverClient(){
@@ -58,7 +63,7 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                         }
                         var interval = setInterval(function(){
                             if(!length){
-                                this.$scope.$apply();
+                                $scope.$apply();
                                 clearInterval(interval);
                             }
                         }, 100);
@@ -67,7 +72,6 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                         orderCreator.getOrder(order).asyncBuildRoute().then(
                             function success(completeOrder){
                                 $scope.orders.push(completeOrder);
-                                $scope.$broadcast()
                                 console.log('order created: ', completeOrder, $scope.orders);
                                 $scope.$apply();
                             },

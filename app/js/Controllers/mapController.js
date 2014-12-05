@@ -146,20 +146,26 @@ define(['angular', 'async!googleMapsApi'], function(){
         };
 
         function completeRoute(){
-            $scope.socketClient.socket.emit('completeOrder', $scope.currentRoute.basics);
-            $scope.currentRoute = null;
-            $scope.onTheRoute = false;
-
+            positioningService.getCurrentPos().then(
+                function success(pos){
+                    $scope.socketClient.updateRegion(pos);
+                    $scope.socketClient.socket.emit('completeOrder', $scope.currentRoute.basics);
+                    $scope.currentRoute = null;
+                    $scope.onTheRoute = false;
+                }
+            )
         };
 
         function go(order){
             if($scope.onTheRoute) completeRoute();
             clearTimeout(order.timeout);
             $scope.currentRoute = order;
+            console.log('order: ', order);
+            $scope.socketClient.updateRegion(order.finish);
             $scope.onTheRoute = true;
             for(var i = $scope.orders.length - 1; i >= 0; i--){
                 if($scope.orders[i] !== order){
-                    $scope.cancelRoute($scope.orders[i]);
+                    cancelRoute($scope.orders[i]);
                 }
             }
             $scope.orders = [];

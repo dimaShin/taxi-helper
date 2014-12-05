@@ -104,11 +104,11 @@ function Region(id){
     this.orders = [];
 }
 
-Region.prototype.addDriver = function(id, socket){
+Region.prototype.addDriver = function(id, socket, isMoving){
     var region = this,
         driver = new Driver(id, socket);
     region.drivers.push(driver);
-    drivers[id] = driver;
+
     if(this.delayedOrders.length){
         var curTime = new Date().getTime();
         for(var i = this.delayedOrders.length - 1; i >= 0; i--){
@@ -120,45 +120,55 @@ Region.prototype.addDriver = function(id, socket){
             this.delayedOrders = [];
         }
     }
-    socket.on('disconnect', function(){
-        region.removeDriver(id);
-        console.log('driver removed: ', id);
-    });
-    socket.on('canceledOrder', function(order){
-        var curTimestamp = new Date().getTime();
-        console.log('is order spoiled: ', curTimestamp - order.timestamp, timeout);
-        if(curTimestamp - order.timestamp > timeout){
-            console.log('timeout for order expired; order canceled');
-            return;
-        }
-        if(!order.canceledDrivers) order.canceledDrivers = [];
-        order.canceledDrivers.push(id);
-        console.log('order canceled, searching new driver', order);
-        region.newOrder(order);
-    });
-    socket.on('acceptedOrder', function(order){
-        console.log('acceping order: ', order);
-        var //index = getSmthById(order.id, region.orders).index,
-            order = getSmthById(order.id, orders).smth;
-        //region.orders.splice(index, 1);
-        order.accepted = id;
-        order.status = 1;
-        driver.hasOrder = order;
-        console.log('order accepted: ', order);
-    });
-    socket.on('driverArrived', function(order){
-        var order = getSmthById(order.id, orders).smth
-        order.waiting = id;
-        order.status = 2;
-        console.log('driver arrived: ', order);
-    });
-    socket.on('completeOrder', function(order){
-        var order = getSmthById(order.id, orders).smth
-        order.complete = id;
-        order.status = 3;
-        driver.hasOrder = false;
-        console.log('order completed: ', order);
-    });
+    if(!isMoving){
+        drivers[id] = driver;
+        socket.on('disconnect', function(){
+            region.removeDriver(id);
+            console.log('driver removed: ', id);
+        });
+        socket.on('canceledOrder', function(order){
+            var curTimestamp = new Date().getTime();
+            console.log('is order spoiled: ', curTimestamp - order.timestamp, timeout);
+            if(curTimestamp - order.timestamp > timeout){
+                console.log('timeout for order expired; order canceled');
+                return;
+            }
+            if(!order.canceledDrivers) order.canceledDrivers = [];
+            order.canceledDrivers.push(id);
+            console.log('order canceled, searching new driver', order);
+            region.newOrder(order);
+        });
+        socket.on('acceptedOrder', function(order){
+            console.log('acceping order: ', order);
+            var //index = getSmthById(order.id, region.orders).index,
+                order = getSmthById(order.id, orders).smth;
+            //region.orders.splice(index, 1);
+            order.accepted = id;
+            order.status = 1;
+            driver.hasOrder = order;
+            console.log('order accepted: ', order);
+        });
+        socket.on('driverArrived', function(order){
+            var order = getSmthById(order.id, orders).smth;
+            order.waiting = id;
+            order.status = 2;
+            console.log('driver arrived: ', order);
+        });
+        socket.on('completeOrder', function(order){
+            var order = getSmthById(order.id, orders).smth;
+            order.complete = id;
+            order.status = 3;
+            driver.hasOrder = false;
+            console.log('order completed: ', order);
+        });
+        socket.on('updateRegion', function(regionId){
+            if(this.id !== regionId){
+                region.removeDriver(driver.id);
+                if(!regions[regionId]) regions[regionId] = new Region(regionId);
+                regions[regionId].addDriver(driver.id, driver.socket, true);
+            }
+        });
+    }
 };
 
 function getSmthById(id, collection){
