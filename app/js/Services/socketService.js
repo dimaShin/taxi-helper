@@ -36,10 +36,10 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
             this.socket.removeAllListeners('gotOrder');
             this.socket.on('gotOrder', function gotOrder(order){
                 console.log('got order: ', order);
-                var length = order.length;
-                if(order){
+                if(order && order.length !== 0){
                     order = orderCreator.getOrder(order);
                     if(order.length){
+                        var length = order.length;
                         for(var i = 0; i < order.length; i++){
                             order[i].asyncBuildRoute().then(
                                 function success(completeOrder){
@@ -55,8 +55,6 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                             }
                         )
                     }
-                }else{
-                    console.log('region is empty');
                 }
                 var interval = $interval(function(){
                     if(!length){
@@ -64,7 +62,6 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                         $interval.cancel(interval);
                     }
                 }, 100);
-
             })
         }
 

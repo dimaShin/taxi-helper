@@ -39,6 +39,7 @@ define(['angular', 'async!googleMapsApi'], function(){
             }
         }, function(newValue, oldValue){
             //ToDo не появляются заказы, которые в данный момент на странице "новые заказы"
+            //ToDo по истичению таймаута не изчезает заказ если открыт роут "все маршруты"
             console.log('region changed: ', $scope.point);
             $scope.orders = [];
             socketService.getDriverClient().getOrdersInRegion($scope.point.id, $scope);

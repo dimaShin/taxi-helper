@@ -142,7 +142,7 @@ define(['angular', 'async!googleMapsApi'], function(){
             $scope.orders.splice(index, 1);
             $scope.socketClient.socket.emit('canceledOrder', order.basics);
             clearTimeout(order.timeout);
-            $scope.$apply();
+            //$scope.$apply();
         };
 
         function completeRoute(){

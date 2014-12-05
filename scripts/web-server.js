@@ -105,6 +105,16 @@ function Region(id){
     this.listeners = [];
 }
 
+function isOrderNotSpoiled(order){
+    var curTimestamp = new Date().getTime();
+    console.log('is order spoiled: ', curTimestamp - order.timestamp, timeout);
+    if(curTimestamp - order.timestamp > timeout){
+        console.log('timeout for order expired; order canceled');
+        return;
+    }
+    return true;
+}
+
 Region.prototype.addDriver = function(id, socket, isMoving){
     var region = this,
         driver = new Driver(id, socket);
@@ -128,12 +138,7 @@ Region.prototype.addDriver = function(id, socket, isMoving){
             console.log('driver removed: ', id);
         });
         socket.on('canceledOrder', function(order){
-            var curTimestamp = new Date().getTime();
-            console.log('is order spoiled: ', curTimestamp - order.timestamp, timeout);
-            if(curTimestamp - order.timestamp > timeout){
-                console.log('timeout for order expired; order canceled');
-                return;
-            }
+            if(!isOrderNotSpoiled(order)) return;
             if(!order.canceledDrivers) order.canceledDrivers = [];
             order.canceledDrivers.push(id);
             console.log('order canceled, searching new driver', order);
@@ -170,13 +175,16 @@ Region.prototype.addDriver = function(id, socket, isMoving){
         });
         socket.on('listenRegion', function(regionId){
             var orders = [];
-            if(!regions[regionId]){
-                regions[regionId] = new Region(regionId);
-                orders = null
-            }else{
-                console.log('region: ', regions[regionId]);
-                for(var i = 0; i < regions[regionId].orders.length; i++){
-                    if(regions[regionId].orders.status === 0) orders.push(regions[regionId].orders)
+            if(!regions[regionId]) regions[regionId] = new Region(regionId);
+            console.log('region: ', regions[regionId]);
+            for(var i = 0; i < regions[regionId].orders.length; i++){
+                var order = regions[regionId].orders[i]
+                if(!isOrderNotSpoiled(order)) continue; //ToDO delete spoiled order
+                if(order.status == 0) {
+                    console.log('suited order: ', order);
+                    orders.push(order)
+                }else{
+                    console.log('order not suited', order);
                 }
             }
             regions[regionId].addListener(socket);
