@@ -30,6 +30,44 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
             if(regionId) this.socket.emit('updateRegion', regionId);
         };
 
+        SocketClient.prototype.getOrdersInRegion = function(regionId, scope){
+            console.log('listen to region: ', regionId);
+            this.socket.emit('listenRegion', regionId);
+            this.socket.removeAllListeners('gotOrder');
+            this.socket.on('gotOrder', function gotOrder(order){
+                console.log('got order: ', order);
+                var length = order.length;
+                if(order){
+                    order = orderCreator.getOrder(order);
+                    if(order.length){
+                        for(var i = 0; i < order.length; i++){
+                            order[i].asyncBuildRoute().then(
+                                function success(completeOrder){
+                                    scope.orders.push(completeOrder);
+                                    length--;
+                                }
+                            )
+                        }
+                    }else{
+                        order.asyncBuildRoute().then(
+                            function success(completeOrder){
+                                scope.orders.unshift(completeOrder);
+                            }
+                        )
+                    }
+                }else{
+                    console.log('region is empty');
+                }
+                var interval = $interval(function(){
+                    if(!length){
+                        scope.$apply();
+                        $interval.cancel(interval);
+                    }
+                }, 100);
+
+            })
+        }
+
         function getDriverClient(){
             console.log('get socketClient ', socket);
             if(socket) {

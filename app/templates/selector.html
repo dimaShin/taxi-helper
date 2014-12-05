@@ -1,13 +1,13 @@
 <div class="selector well well-sm container-fluid">
     <form name="selectorOptions">
         <div class="raw">
-            <span class="selector-caption">Выбрать точку:</span><br />
-            <select ng-model="point" name="point" ng-options="point.caption for point in points" class="container-fluid" style="width:100%">
+            <span class="selector-caption">Выбрать регион:</span><br />
+            <select ng-model="point" name="point" ng-options="point.name for point in points" class="container-fluid" style="width:100%">
             </select>
         </div>
         <div class="raw">
-            <span class="selector-caption">Выбрать радиус:</span>({{ radius / 1000 }}км)<br />
-            <div id="slider" class="radius-selector"></div>
+            <span class="selector-caption">Радиус региона: </span>{{ point.radius / 1000 }}км<br />
+            <!--<div id="slider" class="radius-selector"></div>-->
         </div>
     </form>
 </div>

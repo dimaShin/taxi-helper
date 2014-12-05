@@ -12,7 +12,8 @@ define(['app', 'async!googleMapsApi'], function(app){
                     radius: 2800
                 }),
                 id: '2800:5004611602786298361865618959273',
-                name: 'Алексеевка'
+                name: 'Алексеевка',
+                radius: 2800
             },{
                 //p.pole - derzhprom - pushkinskaja
                 circle: new google.maps.Circle({
@@ -20,7 +21,8 @@ define(['app', 'async!googleMapsApi'], function(app){
                     radius: 2300
                 }),
                 id: '2300:50020975957180563623977510673194',
-                name: 'Павлово Поле - Держпром - Пушкинская'
+                name: 'Павлово Поле - Держпром - Пушкинская',
+                radius: 2300
             },{
                 //vokzal - sovetskaja - gagarina
                 circle: new google.maps.Circle({
@@ -28,7 +30,8 @@ define(['app', 'async!googleMapsApi'], function(app){
                     radius: 2400
                 }),
                 id: '2400:499843318807036636235318873675624',
-                name: 'Вокзал - м. Советская - м. Гагарина'
+                name: 'Вокзал - м. Советская - м. Гагарина',
+                radius: 2400
             },{
                 //moskovskij prospekt - gagarina
 
@@ -37,7 +40,8 @@ define(['app', 'async!googleMapsApi'], function(app){
                     radius: 3900
                 }),
                 id:'3900:499541911622945853629455086545363',
-                name: 'пр. Московский - пр. Гагарина'
+                name: 'пр. Московский - пр. Гагарина',
+                radius: 3900
             },{
                 //severnaja saltovka
                 circle: new google.maps.Circle({
@@ -45,9 +49,12 @@ define(['app', 'async!googleMapsApi'], function(app){
                     radius: 3300
                 }),
                 id:'3300:500262271330613336355314594445304',
-                name: 'м. Героев Труда'
+                name: 'м. Героев Труда',
+                radius: 3300
             }
         ];
+
+
 
         function getRegionId(point){
             var suitedRegions = [];
@@ -85,8 +92,13 @@ define(['app', 'async!googleMapsApi'], function(app){
             }
         };
 
+        function getAllRegions(){
+            return regions;
+        }
+
         return {
-            getRegionId: getRegionId
+            getRegionId: getRegionId,
+            getAllRegions: getAllRegions
         }
     }
     app.factory('regionService', service);

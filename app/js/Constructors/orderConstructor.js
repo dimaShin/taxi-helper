@@ -94,6 +94,13 @@ define(['app', 'Services/regionService', 'async!googleMapsApi'], function(app){
 
         return {
             getOrder: function(basics){
+                if(basics.length){
+                    var orders = [];
+                    for(var i = 0; i < basics.length; i++){
+                        orders.push(new OrderConstructor(basics[i]));
+                    }
+                    return orders;
+                }
                 return new OrderConstructor(basics);
             }
         }

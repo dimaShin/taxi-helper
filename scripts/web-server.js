@@ -102,6 +102,7 @@ function Region(id){
     this.drivers = [];
     this.delayedOrders = [];
     this.orders = [];
+    this.listeners = [];
 }
 
 Region.prototype.addDriver = function(id, socket, isMoving){
@@ -143,14 +144,13 @@ Region.prototype.addDriver = function(id, socket, isMoving){
             var //index = getSmthById(order.id, region.orders).index,
                 order = getSmthById(order.id, orders).smth;
             //region.orders.splice(index, 1);
-            order.accepted = id;
+            order.cabId = id;
             order.status = 1;
             driver.hasOrder = order;
             console.log('order accepted: ', order);
         });
         socket.on('driverArrived', function(order){
             var order = getSmthById(order.id, orders).smth;
-            order.waiting = id;
             order.status = 2;
             console.log('driver arrived: ', order);
         });
@@ -168,7 +168,34 @@ Region.prototype.addDriver = function(id, socket, isMoving){
                 regions[regionId].addDriver(driver.id, driver.socket, true);
             }
         });
+        socket.on('listenRegion', function(regionId){
+            var orders = [];
+            if(!regions[regionId]){
+                regions[regionId] = new Region(regionId);
+                orders = null
+            }else{
+                console.log('region: ', regions[regionId]);
+                for(var i = 0; i < regions[regionId].orders.length; i++){
+                    if(regions[regionId].orders.status === 0) orders.push(regions[regionId].orders)
+                }
+            }
+            regions[regionId].addListener(socket);
+            socket.emit('gotOrder', orders);
+        })
     }
+};
+
+Region.prototype.addListener = function(socket){
+    for(var i in regions){
+        if(regions[i].listeners.length){
+            var listeners = regions[i].listeners;
+            if(listeners.indexOf(socket) !== -1){
+                listeners.splice(listeners.indexOf(socket), 1);
+                break;
+            }
+        }
+    }
+    this.listeners.push(socket);
 };
 
 function getSmthById(id, collection){
@@ -186,10 +213,16 @@ Region.prototype.removeDriver = function(id){
 };
 
 Region.prototype.newOrder = function (order) {
+    this.orders.push(order);
+    if(this.listeners.length){
+        console.log('there are listeners on this region!');
+        for(var i = 0; i < this.listeners.length; i++){
+            this.listeners[i].emit('gotOrder', order);
+        }
+    }
     console.log('seeking driver for order');
     var drivers = this.drivers.slice(0);
     for(var i = drivers.length-1; i >= 0; i--){
-
         if(order.canceledDrivers && order.canceledDrivers.indexOf(drivers[i].id) !== -1){
             drivers.splice(i, 1);
         }
