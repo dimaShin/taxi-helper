@@ -4,7 +4,7 @@ body {
     background-color: darkslategray !important;
 }
 .map-canvas {
-    border: 2px solid #ccc;
+    /*border: 2px solid #ccc;*/
 }
 
 .top-layer {

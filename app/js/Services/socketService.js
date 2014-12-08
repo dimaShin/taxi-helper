@@ -21,9 +21,9 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
             return this;
         };
 
-        SocketClient.prototype.updateScope = function(scope){
-            $scope = scope;
-        };
+        //SocketClient.prototype.updateScope = function(scope){
+        //    $scope = scope;
+        //};
 
         SocketClient.prototype.updateRegion = function(point){
             var regionId = regionService.getRegionId(point);
@@ -43,7 +43,7 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                         for(var i = 0; i < order.length; i++){
                             order[i].asyncBuildRoute().then(
                                 function success(completeOrder){
-                                    scope.orders.push(completeOrder);
+                                    scope.driver.orders.push(completeOrder);
                                     length--;
                                 }
                             )
@@ -51,14 +51,14 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                     }else{
                         order.asyncBuildRoute().then(
                             function success(completeOrder){
-                                scope.orders.unshift(completeOrder);
+                                scope.driver.orders.unshift(completeOrder);
                             }
                         )
                     }
                 }
                 var interval = $interval(function(){
                     if(!length){
-                        scope.$apply();
+                        //scope.$apply();
                         $interval.cancel(interval);
                     }
                 }, 100);
@@ -91,7 +91,7 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                         for(var i = 0; i < order.length; i++){
                             orderCreator.getOrder(order[i]).asyncBuildRoute().then(
                                 function success(completeOrder){
-                                    $scope.orders.push(completeOrder);
+                                    $scope.driver.orders.push(completeOrder);
                                     length--;
                                 }
                             )
@@ -106,8 +106,8 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                         console.log('creating order from basics');
                         orderCreator.getOrder(order).asyncBuildRoute().then(
                             function success(completeOrder){
-                                $scope.orders.push(completeOrder);
-                                console.log('order created: ', completeOrder, $scope.orders);
+                                $scope.driver.orders.push(completeOrder);
+                                console.log('order created: ', completeOrder, $scope.driver.orders);
                                 $scope.$apply();
                             },
                             function error(){
@@ -117,7 +117,7 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                     }
                 });
                 socketClient.on('getId', function(drvId){
-                    $scope.drvId = drvId;
+                    $scope.driver.id = drvId;
                     //ipCookie('clientId', drvId);
                     $scope.$apply();
                 });

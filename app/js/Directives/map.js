@@ -34,19 +34,23 @@ define(['angular', 'async!googleMapsApi'], function(){
                                 }
                             },
                             function(newValue){
-                                el.width(newValue.width).height(newValue.height);
+                                console.log('fitting map: ', newValue);
+                                el.height(newValue.height).width(newValue.width);
                                 $scope.map = $scope.initializeMap(el[0], {zoom:13});
                                 google.maps.event.addListener($scope.map, 'click', function(e){
                                     console.log(e);
                                 });
                                 $scope.ctrlMethods.getCurrentPos().then(
-                                    function success(response){
+                                    function success(position){
                                         $scope.cabMarker = new google.maps.Marker({
-                                            position: response,
+                                            position: position,
                                             draggable: true,
                                             map: $scope.map,
                                             icon: 'img/cabs.png'
                                         });
+                                        if($scope.route.id){
+                                            $scope.renderCurrentRoute(currentRouteRenderer, directionsService, position);
+                                        }
                                     }
                                 );
                             }
@@ -100,31 +104,16 @@ define(['angular', 'async!googleMapsApi'], function(){
                                 return $scope.route;
                             },
                             function(newValue, oldValue){
+                                console.log('map directive: $scope.route', newValue, oldValue);
                                 if(!newValue || !newValue.id) {
+                                    console.log('removing route from map: ', newValue);
                                     currentRouteRenderer.setMap(null);
                                     return
                                 }
-
+                                console.log('start rendering route');
                                 $scope.ctrlMethods.getCurrentPos().then(
                                     function success(position){
-                                        var routeOptions = {
-                                            origin: position,
-                                            destination: $scope.route.route.routes[0].legs[0].end_location,
-                                            travelMode: google.maps.TravelMode['DRIVING'],
-                                            unitSystem: google.maps.UnitSystem.METRIC,
-                                            waypoints: [
-                                                {
-                                                    location: $scope.route.route.routes[0].legs[0].start_location,
-                                                    stopover: true
-                                                }
-                                            ]
-                                        };
-                                        directionsService.route(routeOptions, function(response, status){
-                                            if(status == google.maps.DirectionsStatus.OK){
-                                                currentRouteRenderer.setMap($scope.map);
-                                                currentRouteRenderer.setDirections(response);
-                                            }
-                                        })
+                                        $scope.renderCurrentRoute(currentRouteRenderer, directionsService, position);
                                     }
                                 )
                             }
@@ -151,6 +140,33 @@ define(['angular', 'async!googleMapsApi'], function(){
                     if(options) $.extend(defOptions, options);
                     return new google.maps.Map(el , defOptions);
                 };
+
+                $scope.renderCurrentRoute = function(currentRouteRenderer, directionsService, position){
+                    console.log('got current position: ', $scope.route.route);
+                    var legs = $scope.route.route.routes[0].legs;
+                    var destination = legs[legs.length - 1].end_location,
+                        waypoints = [];
+                    for(var i = 0; i < legs.length; i++){
+                        waypoints.push({
+                            location: legs[i].start_location,
+                            stopover: true
+                        })
+                    }
+                    var routeOptions = {
+                        origin: position,
+                        destination: destination,
+                        travelMode: google.maps.TravelMode['DRIVING'],
+                        unitSystem: google.maps.UnitSystem.METRIC,
+                        waypoints: waypoints
+                    };
+                    directionsService.route(routeOptions, function(response, status){
+                        console.log('rendering');
+                        if(status == google.maps.DirectionsStatus.OK){
+                            currentRouteRenderer.setMap($scope.map);
+                            currentRouteRenderer.setDirections(response);
+                        }
+                    })
+                }
             }
         }
     }
