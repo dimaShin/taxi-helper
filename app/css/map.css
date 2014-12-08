@@ -2,9 +2,13 @@ body {
     margin: 0px;
     padding: 0px;
     background-color: darkslategray !important;
+    width: 100vw;
+    height: 100vh;
 }
 .map-canvas {
-    /*border: 2px solid #ccc;*/
+    border: 2px solid #ccc;
+    width: 100vw;
+    height: 100vh;
 }
 
 .top-layer {
@@ -26,6 +30,7 @@ body {
     -webkit-box-shadow: 0px -3px 2px 0px rgba(50, 50, 50, 0.75);
     -moz-box-shadow:    0px -3px 2px 0px rgba(50, 50, 50, 0.75);
     box-shadow:         0px -3px 2px 0px rgba(50, 50, 50, 0.75);
+    width: 100vw;
 }
 .main-header {
     top: 0px;

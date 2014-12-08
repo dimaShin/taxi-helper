@@ -16,6 +16,11 @@ define(['async!googleMapsApi'], function(){
         };
         if(opt) $.extend(defOpt, opt);
         this.map = new google.maps.Map(el , defOpt);
+        var map = this.map
+        google.maps.event.addDomListener(window, "resize", function() {
+            $(el).width($(window).width()).height($(window).height());
+            console.log('window resized!!!!');
+        });
         return this;
     };
 
@@ -51,10 +56,11 @@ define(['async!googleMapsApi'], function(){
     };
 
     MapConstructor.prototype.addMarker = function(latLng, id, opt){
+        console.log('add marker: ', id, this.map);
         var defOpt = {
             draggable: false,
             map: this.map,
-            center: latLng
+            position: latLng
         };
         if(opt) $.extend(defOpt, opt);
         this.markers.push({

@@ -35,7 +35,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                             },
                             function(newValue){
                                 console.log('fitting map: ', newValue);
-                                el.height(newValue.height).width(newValue.width);
+                                //el.height(newValue.height).width(newValue.width);
                                 $scope.map = $scope.initializeMap(el[0], {zoom:13});
                                 google.maps.event.addListener($scope.map, 'click', function(e){
                                     console.log(e);

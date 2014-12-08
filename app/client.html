@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <link href="css/client.css" rel="stylesheet">
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="js/_lib/jquery-ui-1.11.2/jquery-ui.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Client Taxi</title>
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.5, maximum-scale=1.5, user-scalable=no">
+</head>
+<body ng-controller="clientController">
+<div class="container-fluid loading-bar-container">
+    <img src="fonts/loading.gif" class="loading-bar"/>
+</div>
+<div class="order-compiler" order-compiler>
+
+</div>
+<div class="map-canvas container-fluid" map-canvas>
+
+</div>
+<div class="orders-container" orders-container>
+
+</div>
+
+<audio id="incomingBell" class="audio" ng-hide="always">
+    <source src="source/ring.ogg" type="audio/ogg" />
+</audio>
+<script src="js/_lib/require.js" data-main="js/client/init"></script>
+</body>
+</html>

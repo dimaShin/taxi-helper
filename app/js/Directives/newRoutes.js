@@ -32,7 +32,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                             function(){
                                 var slider = $('ul#slider'),
                                     li = $('ul#slider li');
-                                li.width(el.width() - 10);
+                                li.width(el.width());
                                 slider.width(el.width() * $scope.orders.length + (pad * $scope.orders.length)).css('marginLeft', 0);
 
                             }
@@ -144,7 +144,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                             left: (($(window).width() - maxWidth) / 2) + 'px'
                         })
                     }
-                    $('ul#slider li').width($(window).width() - pad);
+                    $('ul#slider li').width($(window).width());
                 };
 
             }
