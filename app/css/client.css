@@ -3,6 +3,7 @@ body {
     margin: 0px;
     height: 100vh;
     width: 100%;
+    overflow: hidden;
 }
 .map-canvas {
     padding: 0px;
@@ -46,6 +47,7 @@ body {
     margin-top: 3px;
     margin-left: 10px;
     cursor: pointer;
+
 }
 .icon-small{
     width: 30px;
@@ -61,6 +63,79 @@ body {
 .btn:hover{
     color: #fff !important;
 }
+.orders-container{
+    width: 100vw;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+    background-color: #245269;
+    z-index: 150;
+    color:#fff;
+    width: 100vw;
+}
+.order {
+    width: 100vw;
+    overflow: hidden;
+    padding: 5px;
+    border-top: 2px solid #ccc;
+}
+.order-header{
+    width: 5000px;
+}
+.orders-list-container{
+    padding: 0px !important;
+}
+.btn-sm{
+    padding: 2px 5px !important;
+}
+li.order div.container-fluid {
+    margin-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+    overflow: hidden;
+    padding-bottom: 2px;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    border-top: 1px solid #ccc;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    height: 40px;
+    z-index: 150;
+    width: 100%;
+    display: inline-block;
+    line-height: 40px;
+    text-align: center;
+    background-color: #245269;
+    cursor: pointer;
+    color: #fff;
+}
+.shadowed {
+    -webkit-box-shadow: 0px -2px 2px 0px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow:    0px -2px 2px 0px rgba(50, 50, 50, 0.5);
+    box-shadow:         0px -2px 2px 0px rgba(50, 50, 50, 0.5);
+}
+.show-orders{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-color: #245269;
+    z-index: 100;
+    color:#fff;
+    width: 100vw;
+}
+.well {
+    margin-top: 10px !important;
+    background-color: #269abc !important;
+    -webkit-box-shadow: inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5) !important;
+    -moz-box-shadow:    inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5) !important;
+    box-shadow:         inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5) !important;
+}
+
 /*.slide-down.ng-enter, .slide-down.ng-leave{*/
     /*-moz-transition: 0.7s ease-out all;*/
     /*-o-transition: 0.7s ease-out all;*/

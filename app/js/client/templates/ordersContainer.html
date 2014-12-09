@@ -1,0 +1,25 @@
+<div class="orders-container container-fluid">
+    <ul class="orders-list-container" >
+        <li class="order well well-sm" ng-repeat="order in orders">
+            <div class=" container-fluid">
+                <span class="order-header">Заказ #{{ $index + 1 }}</span>
+            </div>
+            <div class="container-fluid">от: {{ order.start_address }}</div>
+            <div class="container-fluid">до: {{ order.end_address }}</div>
+            <div class="container-fluid">
+                <div class="order-price col-xs-6">цена: {{ order.price }}грн.</div>
+                <div class="order-distance col-xs-6">расстояние: {{ order.distance }}</div>
+            </div>
+            <div class="container-fluid">
+                <div class="col-xs-6" ng-bind-html="renderHtml('Статус: ' + order.statusText)"></div>
+                <div class="col-xs-6"><button type="button" class="btn btn-sm pull-right" ng-click="updateOrder(order)" ng-disabled="updateInProgress">обновить</button> </div>
+            </div>
+            <div class="container-fluid" ng-if="order.driver">
+                <div class="col-xs-6">водитель: {{ order.driver }}</div>
+                <div class="col-xs-6"><button type="button" class="btn btn-sm pull-right">показать</button> </div>
+            </div>
+
+        </li>
+    </ul>
+    <div class="footer container-fluid shadowed" ng-click="details.visibility = false">вернуться на карту</div>
+</div>

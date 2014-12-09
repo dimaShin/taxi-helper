@@ -79,6 +79,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                         $scope.originals.liWidth = $('ul#slider li').width();
                     },
                     move: function(e){
+                        console.log('moving: ', e);
                         var newMargin = $scope.originals.marginLeft - ($scope.originals.posX - e.x),
                             rightLimit = $scope.originals.width - $scope.originals.liWidth;
                         if(newMargin > 0 || Math.abs(newMargin) + (pad * $scope.orders.length) > rightLimit) return;

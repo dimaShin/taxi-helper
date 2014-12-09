@@ -5,7 +5,7 @@
 define(['app', 'Services/socketService',
     'Constructors/mapConstructor',
     'Constructors/orderConstructor',
-    'addressService',
+    'Services/addressService',
     'async!googleMapsApi'],
     function(app, socketService, MapConstructor){
 
@@ -19,7 +19,6 @@ define(['app', 'Services/socketService',
 
     function controller($scope, addressService, socketService, orderCreator){
         var mapCanvas = $('div#googleMap')[0],
-            map,
             socketClient = socketService.getOperatorClient().connect();
         $scope.socketClient = socketClient; //ToDo socketClient rename to $scope.SocketClient
         $scope.waypoints = [];
@@ -37,7 +36,7 @@ define(['app', 'Services/socketService',
             },
             function(newValue, oldValue){
                 $(mapCanvas).width(newValue.width - 4).height(newValue.height - 4);
-                map = new MapConstructor().initialize(mapCanvas);
+                $scope.map = new MapConstructor().initialize(mapCanvas);
                 //map = initializeMap(mapCanvas);
             }
         );
@@ -114,7 +113,7 @@ define(['app', 'Services/socketService',
                                 };
                                 $scope.order = order;
 
-                                map.renderRoute(order.route);
+                                $scope.map.renderRoute(order.route);
                                 $scope.orderDescribe = 'Стоимость: ' + $scope.order.price + ' грн.';
                                 $scope.$apply();
                             }
@@ -131,13 +130,9 @@ define(['app', 'Services/socketService',
         $scope.publicOrder = function(){
             $scope.order.basics.timestamp = new Date().getTime();
             socketClient.socket.emit('newOrder', $scope.order.basics);
-
-            socketClient.socket.once('message', function(message){
-            })
-
         };
 
-        $scope.pointOnMap = function(point){
+        $scope.pointOnMap = function(point, map){
             map.setOptions({
                 draggableCursor: 'crosshair'
             });

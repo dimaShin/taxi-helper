@@ -7,7 +7,7 @@
     <meta charset="UTF-8">
     <title>Client Taxi</title>
     <base href="/">
-    <meta name="viewport" content="width=device-width, initial-scale=1.5, maximum-scale=1.5, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 </head>
 <body ng-controller="clientController">
 <div class="container-fluid loading-bar-container">
@@ -19,9 +19,10 @@
 <div class="map-canvas container-fluid" map-canvas>
 
 </div>
-<div class="orders-container" orders-container>
-
+<div class="footer shadowed container-fluid" ng-if="orders.length" ng-click="details.visibility = true" ng-hide="details.visibility">
+    заказы
 </div>
+<div class="orders-container" orders-container ng-show="orders.length && details.visibility"></div>
 
 <audio id="incomingBell" class="audio" ng-hide="always">
     <source src="source/ring.ogg" type="audio/ogg" />

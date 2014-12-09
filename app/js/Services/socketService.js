@@ -21,10 +21,6 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
             return this;
         };
 
-        //SocketClient.prototype.updateScope = function(scope){
-        //    $scope = scope;
-        //};
-
         SocketClient.prototype.updateRegion = function(point){
             var regionId = regionService.getRegionId(point);
             if(regionId) this.socket.emit('updateRegion', regionId);
@@ -141,9 +137,22 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
             return new SocketClient(operatorIntroducing);
         }
 
+        function getPassengerClient(){
+            function passengerIntroducing(){
+                var socketClient = this.socket;
+                socketClient.on('connect', function(){
+                    socketClient.emit('operatorComes');
+                });
+                return this;
+            }
+
+            return new SocketClient(passengerIntroducing);
+        }
+
         return {
             getDriverClient: getDriverClient,
-            getOperatorClient: getOperatorClient
+            getOperatorClient: getOperatorClient,
+            getPassengerClient: getPassengerClient
         }
     }
 

@@ -15,15 +15,20 @@ requirejs.config({
         ngAnimate: '../_lib/angular-animate',
         //jqueryUI: '_lib/jquery-ui-1.11.2/jquery-ui',
         //'jqueryUI-touch' : '_lib/jquery-ui-1.11.2/jquery.ui.touch-punch.min',
-        ngTouch: '_lib/angular-touch',
+        ngTouch: '../_lib/angular-touch',
+        swipe: '../_lib//angular-swipe.min',
         'socket.io-client': 'https://cdn.socket.io/socket.io-1.2.1',
         Constructors: '../Constructors',
-        Services: '../Services'
+        Services: '../Services',
+        root: '../'
     },
     shim: {
         angular: {
             deps: ['jquery', 'underscore'],
             exports: 'angular'
+        },
+        swipe: {
+            deps: ['angular']
         },
         //ngAnimate: {
         //    deps: ['angular']

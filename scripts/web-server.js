@@ -32,7 +32,7 @@ function handler (req, res) {
         function (err, data) {
             if (err) {
                 res.writeHead(500);
-                return res.end('Error loading ', url);
+                return res.end('Error loading ');
             }
             res.writeHead(200, {'Content-type': mimeType});
             res.end(data);

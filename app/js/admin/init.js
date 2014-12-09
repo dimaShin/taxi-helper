@@ -8,6 +8,7 @@ requirejs.config({
         bootstrap: '../_lib/bootstrap',
         //ngRoute: '_lib/angular-route.min.1.3.2',
         //ngModalService: '_lib/ng-modal-service',
+        'ngSanitize': '../_lib/angular-sanitize.min',
         underscore: '../_lib/underscore.min',
         jquery: '../_lib/jquery',
         googleMapsApi: 'https://maps.googleapis.com/maps/api/js?v=3&callback=isNaN&language=ru',
@@ -15,7 +16,7 @@ requirejs.config({
         ngAnimate: '../_lib/angular-animate',
         //jqueryUI: '_lib/jquery-ui-1.11.2/jquery-ui',
         //'jqueryUI-touch' : '_lib/jquery-ui-1.11.2/jquery.ui.touch-punch.min',
-        //ngTouch: '_lib/angular-touch',
+        ngTouch: '../_lib/angular-touch',
         'socket.io-client': 'https://cdn.socket.io/socket.io-1.2.1',
         Constructors: '../Constructors',
         Services: '../Services'
@@ -24,6 +25,9 @@ requirejs.config({
         angular: {
             deps: ['jquery', 'underscore'],
             exports: 'angular'
+        },
+        ngSanitize: {
+            deps:['angular']
         },
         //ngAnimate: {
         //    deps: ['angular']
