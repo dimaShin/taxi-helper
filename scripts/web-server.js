@@ -89,6 +89,16 @@ io.on('connection', function (socket) {
                 console.log('no such order in: ', orders);
                 socket.emit('noSuchOrder');
             }
+        });
+        socket.on('driverPosReq', function(drvId){
+            console.log('driver position request');
+            var drv = getSmthById(drvId, drivers).smth;
+            drv.socket.emit('positionReq');
+            drv.socket.on('positionResp', function(position){
+                socket.emit('driverPosResp', position);
+                console.log('got position: ', position);
+            });
+            console.log('got driver: ', drv);
         })
     });
 
@@ -162,7 +172,7 @@ Region.prototype.addDriver = function(id, socket, isMoving){
         socket.on('completeOrder', function(order){
             var order = getSmthById(order.id, orders).smth;
             order.complete = id;
-            order.status = 3;
+            order.status = 4;
             driver.hasOrder = false;
             console.log('order completed: ', order);
         });
@@ -189,6 +199,11 @@ Region.prototype.addDriver = function(id, socket, isMoving){
             }
             regions[regionId].addListener(socket);
             socket.emit('gotOrder', orders);
+        })
+        socket.on('updateOrderStatus', function(updatedOrder){
+            var order = getSmthById(updatedOrder.id, orders).smth;
+            order.status = updatedOrder.status;
+            console.log('updating order status: ', order);
         })
     }
 };

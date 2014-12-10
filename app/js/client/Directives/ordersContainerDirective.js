@@ -80,6 +80,18 @@ define(['Services/ordStatusService', 'Constructors/orderConstructor'], function(
                 $scope.renderHtml = function(html_code){
                     return $sce.trustAsHtml(html_code);
                 };
+                $scope.showDriver = function(driverId){
+                    $scope.socketClient.socket.emit('driverPosReq', driverId);
+                    $scope.socketClient.socket.on('driverPosResp', function(pos){
+                        var latLng = new google.maps.LatLng(pos.lat, pos.lng);
+                        $scope.map.setCenter(latLng);
+                        $scope.map.addMarker(latLng, driverId, {icon: 'img/cabs.png'});
+                        $scope.visibility.container = $scope.visibility.compiler = false;
+                        $scope.$apply();
+                        console.log('got drv pos: ', pos, $scope);
+                    })
+                }
+
             }
         }
 

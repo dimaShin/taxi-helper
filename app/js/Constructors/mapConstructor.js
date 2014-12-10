@@ -24,6 +24,14 @@ define(['async!googleMapsApi'], function(){
         return this;
     };
 
+    MapConstructor.prototype.setCenter = function(position, isAnimated){
+        if(isAnimated){
+            this.map.panTo(position);
+        }else{
+            this.map.setCenter(position);
+        }
+    }
+
     MapConstructor.prototype.setOptions = function(options){
         this.map.setOptions(options);
     }

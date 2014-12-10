@@ -14,6 +14,7 @@ define(['app', 'Services/regionService', 'async!googleMapsApi'], function(app){
             this.basics.id = this.id;
             this.basics.region = regionService.getRegionId(this.start);
             this.basics.timestamp = basics.timestamp || new Date().getTime();
+            this.basics.status = basics.status || 0;
             this.waypoints = [];
             if(basics.waypoints){
                 for(var i = 0; i < basics.waypoints.length; i++){

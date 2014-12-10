@@ -2,8 +2,8 @@
  * Created by iashind on 27.11.14.
  */
 'use strict';
-define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(app, io, orderConstructor){
-    function socketService(regionService, orderCreator, $interval){
+define(['app', 'socket.io-client', 'Constructors/orderConstructor', 'Services/positioningService'], function(app, io, orderConstructor){
+    function socketService(regionService, orderCreator, $interval, positioningService){
         var socket;
         var $scope;
         function SocketClient(introduce){
@@ -118,6 +118,17 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor'], function(ap
                     $scope.$apply();
                 });
                 socketClient.on('restoreState', function(driver){
+                })
+
+                socketClient.on('positionReq', function(){
+                    positioningService.getCurrentPos().then(
+                        function success(position){
+                            socketClient.emit('positionResp', {
+                                lat: position.lat(),
+                                lng: position.lng()
+                            });
+                        }
+                    )
                 })
                 return this;
             }

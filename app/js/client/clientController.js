@@ -6,8 +6,9 @@ define(['app', 'Services/positioningService', 'Services/socketService'], functio
     console.log('clientController');
     function clientController($scope, socketService){
         console.log('ctrl scope:', $scope);
-        $scope.details = {
-            visibility: false
+        $scope.visibility = {
+            compiler: false,
+            container: false
         };
         $scope.preOrder = {};
         $scope.orders = [];

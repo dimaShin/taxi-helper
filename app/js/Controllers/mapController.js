@@ -158,17 +158,6 @@ define(['angular', 'async!googleMapsApi'], function(){
             //$scope.$apply();
         };
 
-        function completeRoute(){
-            positioningService.getCurrentPos().then(
-                function success(pos){
-                    $scope.driver.socketClient.updateRegion(pos);
-                    $scope.driver.socketClient.socket.emit('completeOrder', $scope.driver.currentRoute.basics);
-                    $scope.driver.currentRoute = null;
-                    $scope.driver.onTheRoute = false;
-                }
-            )
-        };
-
         function go(order){
             if($scope.driver.onTheRoute) completeRoute();
             clearTimeout(order.timeout);
@@ -183,8 +172,20 @@ define(['angular', 'async!googleMapsApi'], function(){
             }
             $scope.driver.orders = [];
             order.basics.timestamp = new Date().getTime();
+            order.basics.status = 1;
             $scope.driver.socketClient.socket.emit('acceptedOrder', order.basics);
             $scope.$broadcast('mapCtrl:go');
+        };
+
+        function completeRoute(){
+            positioningService.getCurrentPos().then(
+                function success(pos){
+                    $scope.driver.socketClient.updateRegion(pos);
+                    $scope.driver.socketClient.socket.emit('completeOrder', $scope.driver.currentRoute.basics);
+                    $scope.driver.currentRoute = null;
+                    $scope.driver.onTheRoute = false;
+                }
+            )
         };
 
         function arrived(order){
@@ -192,6 +193,21 @@ define(['angular', 'async!googleMapsApi'], function(){
             $scope.driver.socketClient.socket.emit('driverArrived', order.basics);
         };
 
+        $scope.$watch(
+            function orderStatusWatcher($scope){
+                var status = ($scope.driver.currentRoute) ? $scope.driver.currentRoute.basics.status : undefined;
+                console.log('status: ', status, $scope);
+                return status;
+            },
+            function(newValue, oldValue){
+                console.log('status changed: ', newValue, oldValue);
+                if(newValue !== oldValue) {
+                    $scope.driver.socketClient.socket.emit('updateOrderStatus', $scope.driver.currentRoute.basics);
+                    console.log('status: ', $scope.driver.currentRoute.basics);
+                }
+
+            }
+        )
 
         $scope.methods = {
             getCurrentPos: positioningService.getCurrentPos,

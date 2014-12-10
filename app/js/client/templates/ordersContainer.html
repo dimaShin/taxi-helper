@@ -16,10 +16,10 @@
             </div>
             <div class="container-fluid" ng-if="order.driver">
                 <div class="col-xs-6">водитель: {{ order.driver }}</div>
-                <div class="col-xs-6"><button type="button" class="btn btn-sm pull-right">показать</button> </div>
+                <div class="col-xs-6"><button type="button" class="btn btn-sm pull-right" ng-click="showDriver(order.driver)">показать</button> </div>
             </div>
 
         </li>
     </ul>
-    <div class="footer container-fluid shadowed" ng-click="details.visibility = false">вернуться на карту</div>
+    <div class="footer container-fluid shadowed" ng-click="visibility.container = false; visibility.compiler = false">вернуться на карту</div>
 </div>

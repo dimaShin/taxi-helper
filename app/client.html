@@ -19,10 +19,10 @@
 <div class="map-canvas container-fluid" map-canvas>
 
 </div>
-<div class="footer shadowed container-fluid" ng-if="orders.length" ng-click="details.visibility = true" ng-hide="details.visibility">
+<div class="footer shadowed container-fluid" ng-if="orders.length" ng-click="visibility.container = true" ng-hide="visibility.container">
     заказы
 </div>
-<div class="orders-container" orders-container ng-show="orders.length && details.visibility"></div>
+<div class="orders-container" orders-container ng-show="orders.length && visibility.container"></div>
 
 <audio id="incomingBell" class="audio" ng-hide="always">
     <source src="source/ring.ogg" type="audio/ogg" />
