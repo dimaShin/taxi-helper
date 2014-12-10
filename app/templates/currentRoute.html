@@ -6,9 +6,9 @@
     </div>
     <div class="accepted-content" ng-show="contentVisibility">
         <span class="order-point">До: {{order.end_address}} ({{order.distance}})</span><br />
-        <button class="route-btn" type="button" ng-click="order.basics.status = 2" ng-show="order.basics.status == 1">На месте</button>
-        <button class="route-btn" type="button" ng-click="order.basics.status = 3" ng-show="order.basics.status == 2">В пути</button>
-        <button class="route-btn" type="button" ng-click="completeRoute()" ng-show="order.basics.status == 3">Выполнен</button>
+        <button class="route-btn" type="button" ng-click="order.basics.status = 2" ng-if="order.basics.status == 1">На месте</button>
+        <button class="route-btn" type="button" ng-click="order.basics.status = 3" ng-if="order.basics.status == 2">В пути</button>
+        <button class="route-btn" type="button" ng-click="completeRoute()" ng-if="order.basics.status == 3">Выполнен</button>
     </div>
 </div>
 <div class="container-fluid" ng-if="inTheQueue && !order.start_address">

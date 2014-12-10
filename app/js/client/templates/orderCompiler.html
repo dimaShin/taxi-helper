@@ -1,33 +1,34 @@
 <div class="compiler-header" ng-click="visibility.compiler = !visibility.compiler">
     Вызвать такси
 </div>
-<div class="compiler-body container-fluid slide-down" ng-if="visibility.compiler">
-    <form name="orderCompiler" role="form">
-        <div class="raw container-fluid">
-            <input type="text" class="form-control" placeholder="Адрес от" name="addressFrom" ng-model="addressFrom" required/>
-            <img src="img/icon-map.png" class="icon" ng-click="pointOnMap(orderCompiler.addressFrom, map)"/>
-        </div>
-        <div class="raw container-fluid">
-            <input type="text" class="form-control" placeholder="Адрес до" name="addressTo" ng-model="addressTo" required/>
-            <img src="img/icon-map.png" class="icon" ng-click="pointOnMap(orderCompiler.addressTo, map)"/>
-        </div>
-        <div class="raw container-fluid" ng-repeat="point in waypoints" ng-if="waypoints.length">
-            <input type="text" class="form-control col-lg-8" placeholder="Через" ng-model=point.value required>
-            <img src="img/delete.png" ng-click="waypoints.splice($index, 1)" class="icon">
-        </div>
-        <div class="row container-fluid">
-            <a href="javascript:;" ng-click="waypoints.push({id:'id' + waypoints.length})"><img src="img/add-waypoint.png" class="icon-small"/> </a>
-            <div class="pull-right">
-                <button type="button" class="btn btn-sm" ng-click="calcRoute(orderCompiler, waypoints)" ng-disabled="orderCompiler.$invalid || !orderCompiler.$dirty">Рассчитать</button>
-                <button type="button" class="btn btn-sm" ng-click="publicOrder();" ng-disabled="!preOrder.id">Вызвать</button>
+<div class="compiler-body-frame container-fluid">
+    <div class="compiler-body container-fluid slide-down" ng-if="visibility.compiler">
+        <form name="orderCompiler" role="form">
+            <div class="raw container-fluid">
+                <input type="text" class="form-control" placeholder="Адрес от" name="addressFrom" ng-model="addressFrom" required/>
+                <img src="img/icon-map.png" class="icon" ng-click="pointOnMap(orderCompiler.addressFrom, map)"/>
             </div>
-        </div>
-        <div class="container-fluid" ng-if="preOrder.price">
-            Стоимость: {{ preOrder.price | filter:'currency'}}
-        </div>
-        <div class="container-fluid" ng-if="orderError">
-            {{ orderError }}
-        </div>
-    </form>
-
+            <div class="raw container-fluid">
+                <input type="text" class="form-control" placeholder="Адрес до" name="addressTo" ng-model="addressTo" required/>
+                <img src="img/icon-map.png" class="icon" ng-click="pointOnMap(orderCompiler.addressTo, map)"/>
+            </div>
+            <div class="raw container-fluid" ng-repeat="point in waypoints" ng-if="waypoints.length">
+                <input type="text" class="form-control col-lg-8" placeholder="Через" ng-model=point.value required>
+                <img src="img/delete.png" ng-click="waypoints.splice($index, 1)" class="icon">
+            </div>
+            <div class="row container-fluid">
+                <a href="javascript:;" ng-click="waypoints.push({id:'id' + waypoints.length})"><img src="img/add-waypoint.png" class="icon-small"/> </a>
+                <div class="pull-right">
+                    <button type="button" class="btn btn-sm" ng-click="calcRoute(orderCompiler, waypoints)" ng-disabled="orderCompiler.$invalid || !orderCompiler.$dirty">Рассчитать</button>
+                    <button type="button" class="btn btn-sm" ng-click="publicOrder();" ng-disabled="!preOrder.id">Вызвать</button>
+                </div>
+            </div>
+            <div class="container-fluid" ng-if="preOrder.price">
+                Стоимость: {{ preOrder.price | filter:'currency'}}
+            </div>
+            <div class="container-fluid" ng-if="orderError">
+                {{ orderError }}
+            </div>
+        </form>
+    </div>
 </div>

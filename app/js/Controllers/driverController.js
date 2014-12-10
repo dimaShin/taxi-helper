@@ -17,6 +17,25 @@ define([], function(){
             waiting: false,
             inTheQueue: false
         };
+        //var driverTimeOut = 5000;
+        //$scope.$watchCollection(
+        //    function ordersWatcher($scope){
+        //        return $scope.driver.orders;
+        //    },
+        //    function(newValue, oldValue){
+        //        console.log('orders changed');
+        //        for(var i = 0; i < newValue.length; i++){
+        //            if(!newValue[i].timeout){
+        //                (function(order){
+        //                    order.timeout = setTimeout(function(){
+        //                        console.log('timeout expired, canceling order');
+        //                        $scope.mapCtrl.cancelRoute(order);
+        //                    }, driverTimeOut)
+        //                })(newValue[i])
+        //            }
+        //        }
+        //    }
+        //);
     }
 
     return driverController;

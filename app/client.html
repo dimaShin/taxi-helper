@@ -22,7 +22,7 @@
 <div class="footer shadowed container-fluid" ng-if="orders.length" ng-click="visibility.container = true" ng-hide="visibility.container">
     заказы
 </div>
-<div class="orders-container" orders-container ng-show="orders.length && visibility.container"></div>
+<div class="orders-container slide-up" orders-container ng-if="orders.length && visibility.container"></div>
 
 <audio id="incomingBell" class="audio" ng-hide="always">
     <source src="source/ring.ogg" type="audio/ogg" />

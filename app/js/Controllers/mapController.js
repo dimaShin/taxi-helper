@@ -154,8 +154,8 @@ define(['angular', 'async!googleMapsApi'], function(){
             var index = $scope.driver.orders.indexOf(order);
             $scope.driver.orders.splice(index, 1);
             $scope.driver.socketClient.socket.emit('canceledOrder', order.basics);
-            clearTimeout(order.timeout);
-            //$scope.$apply();
+            //clearTimeout(order.timeout);
+            $scope.$apply();
         };
 
         function go(order){
@@ -182,7 +182,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                 function success(pos){
                     $scope.driver.socketClient.updateRegion(pos);
                     $scope.driver.socketClient.socket.emit('completeOrder', $scope.driver.currentRoute.basics);
-                    $scope.driver.currentRoute = null;
+                    $scope.driver.currentRoute = {};
                     $scope.driver.onTheRoute = false;
                 }
             )
@@ -195,7 +195,7 @@ define(['angular', 'async!googleMapsApi'], function(){
 
         $scope.$watch(
             function orderStatusWatcher($scope){
-                var status = ($scope.driver.currentRoute) ? $scope.driver.currentRoute.basics.status : undefined;
+                var status = ($scope.driver.currentRoute.basics) ? $scope.driver.currentRoute.basics.status : undefined;
                 console.log('status: ', status, $scope);
                 return status;
             },

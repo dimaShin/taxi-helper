@@ -20,6 +20,8 @@ body {
     z-index: 100;
     background-color: #245269;
     color: #fff;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 .compiler-header{
     height: 40px;
@@ -32,9 +34,16 @@ body {
     -webkit-box-shadow: 0px 2px 2px 0px rgba(50, 50, 50, 0.5);
     -moz-box-shadow:    0px 2px 2px 0px rgba(50, 50, 50, 0.5);
     box-shadow:         0px 2px 2px 0px rgba(50, 50, 50, 0.5);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 .compiler-body{
     padding: 10px !important;
+    -webkit-box-shadow: 0px 2px 2px 0px rgba(50, 50, 50, 0.5);
+    -moz-box-shadow:    0px 2px 2px 0px rgba(50, 50, 50, 0.5);
+    box-shadow:         0px 2px 2px 0px rgba(50, 50, 50, 0.5);
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 .compiler-body input{
     width: 80%;
@@ -136,22 +145,48 @@ li.order div.container-fluid {
     box-shadow:         inset 0px 0px 2px 0px rgba(50, 50, 50, 0.5) !important;
 }
 
-/*.slide-down.ng-enter, .slide-down.ng-leave{*/
-    /*-moz-transition: 0.7s ease-out all;*/
-    /*-o-transition: 0.7s ease-out all;*/
-    /*-webkit-transition: 0.7s ease-out all;*/
-    /*transition: 0.7s ease-out all;*/
-/*}*/
-/*.slide-down.ng-enter {*/
-    /*opacity: 0;*/
-/*}*//* starting animations for enter */
-/*.slide-down.ng-enter.ng-enter-active {*/
-    /*opacity: 1;*/
-/*}*//* terminal animations for enter */
-/*.slide-down.ng-leave {*/
-    /*opacity: 1;*/
-/*}*//* starting animations for leave */
-/*.slide-down.ng-leave.ng-leave-active {*/
-    /*opacity: 0;*/
-/*}*//* terminal animations for leave */
+.compiler-body-frame {
+    overflow: hidden;
+}
+
+.slide-down.ng-enter, .slide-down.ng-leave, .slide-up.ng-enter, .slide-up.ng-leave{
+    -moz-transition: 0.2s ease-out all;
+    -o-transition: 0.2s ease-out all;
+    -webkit-transition: 0.2s ease-out all;
+    transition: all 300ms cubic-bezier(0.455, 0.430, 0.460, 1.020);
+
+}
+.slide-down.ng-enter {
+    opacity: 0;
+    margin-top: -200px;
+}/* starting animations for enter*/
+.slide-down.ng-enter.ng-enter-active {
+    opacity: 1;
+    margin-top: 0px;
+}/* terminal animations for enter*/
+.slide-down.ng-leave {
+    opacity: 1;
+    margin-top: 0px;
+}/* starting animations for leave*/
+.slide-down.ng-leave.ng-leave-active {
+    opacity: 0;
+    margin-top: -200px;
+}/* terminal animations for leave*/
+.slide-up.ng-enter {
+    opacity: 0;
+    margin-top: 100vh;
+}/* starting animations for enter*/
+.slide-up.ng-enter.ng-enter-active {
+    opacity: 1;
+    margin-top: 0px;
+}/* terminal animations for enter*/
+.slide-up.ng-leave {
+    opacity: 1;
+    margin-top: 0px;
+}/* starting animations for leave*/
+.slide-up.ng-leave.ng-leave-active {
+    opacity: 0;
+    margin-top: 100vh;
+}/* terminal animations for leave*/
+
 

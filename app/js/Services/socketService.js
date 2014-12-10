@@ -129,7 +129,19 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor', 'Services/po
                             });
                         }
                     )
-                })
+                });
+
+                socketClient.on('timeout', function(orderId){
+                    console.log('timeout: ', orderId);
+                    var orders = $scope.driver.orders;
+                    for(var i = 0, length = orders.length; i < length; i++){
+                        if(orders[i].id = orderId){
+                            orders.splice(i, 1);
+                            $scope.$apply();
+                            return;
+                        }
+                    }
+                });
                 return this;
             }
             socket = new SocketClient(driverIntroducing);

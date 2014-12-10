@@ -30,9 +30,9 @@ requirejs.config({
         swipe: {
             deps: ['angular']
         },
-        //ngAnimate: {
-        //    deps: ['angular']
-        //},
+        ngAnimate: {
+            deps: ['angular']
+        },
         //ngRoute: {
         //    deps: ['angular']
         //},

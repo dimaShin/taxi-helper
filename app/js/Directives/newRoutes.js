@@ -18,7 +18,7 @@ define(['angular', 'async!googleMapsApi'], function(){
             },
             transclude: true,
             compile: function(){
-                var driverTimeOut = 60000;
+                var driverTimeOut = 5000;
                 return {
                     pre: function($scope, el, attr, ctrl){
                         $scope.fitWidth(el);
@@ -44,16 +44,16 @@ define(['angular', 'async!googleMapsApi'], function(){
                             },
                             function(newValue, oldValue){
                                 console.log('orders changed');
-                                for(var i = 0; i < newValue.length; i++){
-                                    if(!newValue[i].timeout){
-                                        (function(order){
-                                            order.timeout = setTimeout(function(){
-                                                console.log('timeout expired, canceling order');
-                                                $scope.mapCtrl.cancelRoute(order);
-                                            }, driverTimeOut)
-                                        })(newValue[i])
-                                    }
-                                }
+                                //for(var i = 0; i < newValue.length; i++){
+                                //    if(!newValue[i].timeout){
+                                //        (function(order){
+                                //            order.timeout = setTimeout(function(){
+                                //                console.log('timeout expired, canceling order');
+                                //                $scope.mapCtrl.cancelRoute(order);
+                                //            }, driverTimeOut)
+                                //        })(newValue[i])
+                                //    }
+                                //}
                             }
                         );
                         $scope.$watch(

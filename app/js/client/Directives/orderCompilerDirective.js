@@ -80,6 +80,7 @@ define(['root/utils', 'Services/addressService', 'Constructors/orderConstructor'
                     $scope.orders.push($scope.preOrder);
                     $scope.preOrder = {};
                     $scope.waypoints = [];
+                    $scope.visibility.compiler = false;
                     console.log($scope.preOrder);
                 }
             }
