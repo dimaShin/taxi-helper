@@ -72,10 +72,19 @@ define(['app', 'Services/regionService', 'async!googleMapsApi'], function(app){
                 order.end_address = getNormalizedAddress(response.routes[0].legs[lastLeg].end_address);
                 order.distance = getRouteDistance(response.routes[0]);
                 order.price = calcPrice(getRouteDistance(response.routes[0], true), isUrgent);
+                order.duration = getRouteDuration(response.routes[0]);
                 deferred.resolve(order);
             });
             return deferred.promise();
         };
+
+        function getRouteDuration(route){
+            var duration = route.legs[0].duration.value;
+            for(var i = 1; i < route.legs.length; i++){
+                duration += route.legs[i].duration.value;
+            }
+            return duration * 1000;
+        }
 
         function getRouteDistance(route, isInt){
             var distance = route.legs[0].distance.value;

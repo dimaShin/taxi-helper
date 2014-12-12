@@ -160,7 +160,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                         waypoints: waypoints
                     };
                     directionsService.route(routeOptions, function(response, status){
-                        console.log('rendering');
+                        console.log('rendering: ', response);
                         if(status == google.maps.DirectionsStatus.OK){
                             currentRouteRenderer.setMap($scope.map);
                             currentRouteRenderer.setDirections(response);

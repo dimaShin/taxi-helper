@@ -19,7 +19,9 @@ define(['app', 'Services/positioningService', 'Services/socketService'], functio
         $scope.addOrder = function(order){
             $scope.orders.push(order);
         };
-
+        $scope.getWindowHeight = function(){
+            return window.innerHeight;
+        }
         $scope.$watchCollection(
             function ordersWatcher($scope){
                 return $scope.orders;

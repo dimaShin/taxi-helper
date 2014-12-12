@@ -1,6 +1,7 @@
 <div class="compiler-header" ng-click="visibility.compiler = !visibility.compiler">
     Вызвать такси
 </div>
+
 <div class="compiler-body-frame container-fluid">
     <div class="compiler-body container-fluid slide-down" ng-if="visibility.compiler">
         <form name="orderCompiler" role="form">
@@ -18,7 +19,7 @@
             </div>
             <div class="row container-fluid">
                 <a href="javascript:;" ng-click="waypoints.push({id:'id' + waypoints.length})"><img src="img/add-waypoint.png" class="icon-small"/> </a>
-                <div class="pull-right">
+                <div class="pull-right compiler-buttons">
                     <button type="button" class="btn btn-sm" ng-click="calcRoute(orderCompiler, waypoints)" ng-disabled="orderCompiler.$invalid || !orderCompiler.$dirty">Рассчитать</button>
                     <button type="button" class="btn btn-sm" ng-click="publicOrder();" ng-disabled="!preOrder.id">Вызвать</button>
                 </div>

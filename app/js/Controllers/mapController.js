@@ -5,48 +5,10 @@
 
 define(['angular', 'async!googleMapsApi'], function(){
 
-    function mapController($scope, operatorService, $interval, positioningService, $location, socketService, orderCreator){
+    function mapController($scope, operatorService, $interval, positioningService, $location, socketService, orderCreator, $filter){
 
         console.log('initialize: ', $scope.driver);
-        //(function initialize($scope){
-        //    $scope.socketClient = socketService.getDriverClient();
-        //    $scope.orders = [];
-        //    $scope.currentRoute = {};
-        //    $scope.onTheRoute = false;
-        //    $scope.waiting = false;
-        //    $scope.radius = 2000;
-        //    $scope.inTheQueue = false;
-        //    console.log('map scope: ', $scope);
-        //    $scope.$watch(
-        //        function locationWatcher(){
-        //            return $location.path();
-        //        },
-        //        function(newValue, oldValue) {
-        //            if (newValue === oldValue) return;
-        //            if (window.sessionStorage && JSON) {
-        //                if(!sessionStorage.mapState){
-        //                    $(window).on('unload', function cleanSessionStorage() {
-        //                        sessionStorage.removeItem('mapState');
-        //                    });
-        //                }
-        //                var routesBasics = [], storageInstance;
-        //                for (var i = 0; i < $scope.orders.length; i++) {
-        //                    routesBasics.push($scope.orders[i].basics);
-        //                }
-        //                storageInstance = JSON.stringify({
-        //                    orders: JSON.stringify(routesBasics),
-        //                    currentRoute: ($scope.currentRoute) ? $scope.currentRoute.basics : null,
-        //                    radius: $scope.radius,
-        //                    onTheRoute: $scope.onTheRoute,
-        //                    inTheQueue: $scope.inTheQueue,
-        //                    drvId: $scope.drvId
-        //                });
-        //                console.log('driver: ', $scope.drvId);
-        //                sessionStorage.mapState = storageInstance;
-        //            };
-        //        }
-        //    );
-        //
+
             $scope.$watch(
                 function queueWatcher($scope){
                     return $scope.driver.inTheQueue;
@@ -68,53 +30,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                     }
                 }
             );
-        //$scope.$watch(
-        //    function drvIdWatcher($scope){
-        //        return $scope.$parent.drvId;
-        //    },
-        //    function (newValue){
-        //        console.log('drvId: ', newValue);
-        //        $scope.drvId = newValue;
-        //    }
-        //);
-        //
-        //    if(window.sessionStorage && window.sessionStorage.mapState){
-        //        $scope.socketClient.updateScope($scope);
-        //        var mapState = JSON.parse(window.sessionStorage.mapState),
-        //            ordersBasics = JSON.parse(mapState.orders);
-        //
-        //        if(mapState.onTheRoute){
-        //            $scope.onTheRoute = true;
-        //            $scope.currentRoute = orderCreator.getOrder(mapState.currentRoute).asyncBuildRoute().then(
-        //                function success(order){
-        //                    $scope.currentRoute = order;
-        //                    $scope.$apply();
-        //                }
-        //            );
-        //        }
-        //        $scope.drvId = mapState.drvId;
-        //        $scope.radius = mapState.radius;
-        //        $scope.inTheQueue = mapState.inTheQueue;
-        //        for(var i = 0; i < ordersBasics.length; i++){
-        //            var length = ordersBasics.length;
-        //            for(var i = 0; i < ordersBasics.length; i++){
-        //                orderCreator.getOrder(ordersBasics[i]).asyncBuildRoute().then(
-        //                    function success(completeOrder){
-        //                        $scope.orders.push(completeOrder);
-        //                        length--;
-        //                    }
-        //                )
-        //            }
-        //            var interval = setInterval(function(){
-        //                if(!length){
-        //                    $scope.$apply();
-        //                    clearInterval(interval);
-        //                }
-        //            }, 100);
-        //        }
-        //    }else{
-        //
-        //    };
+
             $('div#mainHeader')
                 .on('mousedown', function(){
                     $(this).removeClass('main-header-shadowed');
@@ -122,30 +38,7 @@ define(['angular', 'async!googleMapsApi'], function(){
                 .on('mouseup', function(){
                 $(this).addClass('main-header-shadowed');
             });
-        //
-        //})($scope);
-        //
-        //function getBounds(){
-        //    var deferred = $.Deferred();
-        //    if($scope.onTheRoute){
-        //        deferred.resolve(createCircle($scope.currentRoute.finish).getBounds());
-        //    }else{
-        //        positioningService.getCurrentPos().then(
-        //            function success(response){
-        //                deferred.resolve(createCircle(response).getBounds());
-        //            }
-        //        )
-        //    }
-        //    return deferred.promise();
-        //};
-        //
-        //function createCircle(center){
-        //    return new google.maps.Circle({
-        //                center: center,
-        //                radius: $scope.radius
-        //            });
-        //};
-        //
+
         function renderRoute(route){
             $scope.$broadcast('mapController:renderRoute', route);
         };
@@ -155,12 +48,12 @@ define(['angular', 'async!googleMapsApi'], function(){
             $scope.driver.orders.splice(index, 1);
             $scope.driver.socketClient.socket.emit('canceledOrder', order.basics);
             //clearTimeout(order.timeout);
-            $scope.$apply();
+            //$scope.$apply();
         };
 
         function go(order){
             if($scope.driver.onTheRoute) completeRoute();
-            clearTimeout(order.timeout);
+            //clearTimeout(order.timeout);
             $scope.driver.currentRoute = order;
             console.log('order: ', order);
             $scope.driver.socketClient.updateRegion(order.finish);
@@ -173,7 +66,24 @@ define(['angular', 'async!googleMapsApi'], function(){
             $scope.driver.orders = [];
             order.basics.timestamp = new Date().getTime();
             order.basics.status = 1;
-            $scope.driver.socketClient.socket.emit('acceptedOrder', order.basics);
+            positioningService.getCurrentPos().then(
+                function success(currPos){
+                    var routeToPassenger = {
+                        origin: currPos,
+                        destination: order.start,
+                        travelMode: google.maps.TravelMode['DRIVING'],
+                        unitSystem: google.maps.UnitSystem.METRIC
+                    };
+                    (new google.maps.DirectionsService).route(routeToPassenger, function(route, status){
+                        var curTime = new Date().getTime();
+                        order.basics.arrivalTime = curTime + (route.routes[0].legs[0].duration.value * 1.3 * 1000);
+                        $scope.driver.socketClient.socket.emit('acceptedOrder', order.basics);
+                    })
+                }
+            )
+
+
+
             $scope.$broadcast('mapCtrl:go');
         };
 
@@ -181,6 +91,7 @@ define(['angular', 'async!googleMapsApi'], function(){
             positioningService.getCurrentPos().then(
                 function success(pos){
                     $scope.driver.socketClient.updateRegion(pos);
+                    $scope.driver.currentRoute.basics.arrivalTime = new Date().getTime();
                     $scope.driver.socketClient.socket.emit('completeOrder', $scope.driver.currentRoute.basics);
                     $scope.driver.currentRoute = {};
                     $scope.driver.onTheRoute = false;
@@ -195,27 +106,31 @@ define(['angular', 'async!googleMapsApi'], function(){
 
         $scope.$watch(
             function orderStatusWatcher($scope){
-                var status = ($scope.driver.currentRoute.basics) ? $scope.driver.currentRoute.basics.status : undefined;
-                console.log('status: ', status, $scope);
-                return status;
+                return $scope.driver.currentRoute.basics ? $scope.driver.currentRoute.basics.status : undefined;
             },
             function(newValue, oldValue){
                 console.log('status changed: ', newValue, oldValue);
-                if(newValue !== oldValue) {
+                if(newValue !== oldValue && $scope.driver.currentRoute.basics) {
+                    var curTime = new Date().getTime(), arTime;
+                    switch(newValue){
+                        case 2: arTime = curTime; break;
+                        case 3: arTime = curTime + $scope.driver.currentRoute.duration; break;
+                    }
+                    var arTimeFormatted = $filter('date')(arTime, 'H:m');
+                    console.log('arTime: ', arTimeFormatted);
+                    $scope.driver.currentRoute.basics.arrivalTime = arTime;
                     $scope.driver.socketClient.socket.emit('updateOrderStatus', $scope.driver.currentRoute.basics);
                     console.log('status: ', $scope.driver.currentRoute.basics);
                 }
-
             }
-        )
+        );
 
         $scope.methods = {
             getCurrentPos: positioningService.getCurrentPos,
             renderRoute: renderRoute,
             cancelRoute: cancelRoute,
             go: go,
-            completeRoute: completeRoute,
-            arrived: arrived
+            completeRoute: completeRoute
         }
         console.log('map $scope: ', $scope);
     }

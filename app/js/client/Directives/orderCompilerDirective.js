@@ -83,6 +83,7 @@ define(['root/utils', 'Services/addressService', 'Constructors/orderConstructor'
                     $scope.visibility.compiler = false;
                     console.log($scope.preOrder);
                 }
+
             }
         }
     }

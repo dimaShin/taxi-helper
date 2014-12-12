@@ -1,9 +1,28 @@
 <div class="routes-bg">
-    <a href="/map"><div class="main-header container-fluid text-center top-layer main-header-shadowed" id="mainHeader">
-        Вернуться на карту
-    </div></a>
-    <div selector class="selector" points="points" radius="radius" point="point">
+    <a href="/map">
+        <div class="main-header container-fluid text-center top-layer main-header-shadowed" id="mainHeader">
+            Вернуться на карту
+        </div>
+    </a>
+    <div class="selector well well-sm container-fluid">
+        <form name="selectorOptions">
+            <div class="raw">
+                <span class="selector-caption">Выбрать регион:</span><br />
+                <select ng-model="point" name="point" ng-options="point.name for point in points" class="container-fluid" style="width:100%">
+                </select>
+            </div>
+            <div class="raw">
+                <span class="selector-caption">Радиус региона: </span>{{ point.radius / 1000 }}км<br />
+                <!--<div id="slider" class="radius-selector"></div>-->
+            </div>
+        </form>
     </div>
-    <div results class="results" orders="orders">
+    <div class="routes-container container-fluid">
+        <div ng-repeat="order in orders" class="well well-sm container-fluid single-route animation">
+            <span class="route-caption">Заказ:</span><br />
+            <span class="route-caption">От: {{ order.start_address }}</span><br />
+            <span class="route-caption">До: {{ order.end_address }}</span><br />
+            <span class="route-caption">Расстояние: {{ order.distance }} Стоимость: {{ order.price }}</span><br />
+        </div>
     </div>
 </div>

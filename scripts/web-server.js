@@ -41,8 +41,9 @@ function handler (req, res) {
 var regions = {};
 var orders = [];
 var timeout = 600000;
-var timeoutPerDriver = 5000;
+var timeoutPerDriver = 10000;
 var drivers = {};
+var timeouts = {};
 
 var storage = {
     regions: {},
@@ -68,6 +69,12 @@ var storage = {
     setOrder: function setOrder(order){
         if(getSmthById(order.id, this.orders)) return;
         this.orders.push(order);
+    },
+    updateOrder: function updateOrder(basics){
+        var order = this.getOrder(basics.id);
+        for(var i in basics){
+            order[i] = basics[i];
+        }
     }
 
 }
@@ -91,12 +98,12 @@ io.on('connection', function (socket) {
     });
 
     socket.on('operatorComes', function(){
-        console.log("it's operator");
+        //console.log("it's operator");
         socket.on('newOrder', function (order) {
             order.status = 0;
-            console.log('newOrder: ', order);
+            //console.log('newOrder: ', order);
             var rId = order.region;
-            storage.getRegion(rId).newOrder(order);
+            storage.getRegion(rId).newOrder(order, 'socket on new order');
             storage.setOrder(order);
             //if(!regions[rId]) regions[rId] = new Region(rId);
             //regions[rId].newOrder(order);
@@ -112,20 +119,20 @@ io.on('connection', function (socket) {
                 console.log('found one: ', order);
                 socket.emit('orderFound', order);
             }else{
-                console.log('no such order in: ', orders);
+                //console.log('no such order in: ', orders);
                 socket.emit('noSuchOrder');
             }
         });
         socket.on('driverPosReq', function(drvId){
-            console.log('driver position request');
+            //console.log('driver position request');
             //var drv = getSmthById(drvId, drivers).smth;
             var drv = storage.getDriver(drvId);
             drv.socket.emit('positionReq');
             drv.socket.on('positionResp', function(position){
                 socket.emit('driverPosResp', position);
-                console.log('got position: ', position);
+                //console.log('got position: ', position);
             });
-            console.log('got driver: ', drv);
+            //console.log('got driver: ', drv);
         })
     });
 
@@ -163,7 +170,7 @@ Region.prototype.addDriver = function(id, socket, isMoving){
             if(curTime - this.delayedOrders[i].timestamp > timeout) this.delayedOrders.splice(i, 1);
         }
         if(this.delayedOrders.length){
-            console.log('found delayed order');
+            //console.log('found delayed order');
             driver.sendOrder(this.delayedOrders);
             this.delayedOrders = [];
         }
@@ -174,41 +181,39 @@ Region.prototype.addDriver = function(id, socket, isMoving){
         socket.on('disconnect', function(){
             region.removeDriver(id);
             storage.removeDriver(id);
-            console.log('driver removed: ', id);
+            //console.log('driver removed: ', id);
         });
         socket.on('canceledOrder', function(order){
+            order = storage.getOrder(order.id);
+            clearTimeout(timeouts[order.id]);
             if(!isOrderNotSpoiled(order)) return;
             if(!order.canceledDrivers) order.canceledDrivers = [];
             order.canceledDrivers.push(id);
-            console.log('order canceled, searching new driver', order);
-            clearTimeout(order.timeout);
-            region.newOrder(order);
+            region.newOrder(order, 'socket on cancelRoute');
         });
         socket.on('acceptedOrder', function(order){
-            console.log('acceping order: ', order);
-            var //index = getSmthById(order.id, region.orders).index,
-                //order = getSmthById(order.id, orders).smth;
-                order = storage.getOrder(order.id);
-            //region.orders.splice(index, 1);
             order.cabId = id;
             order.status = 1;
-            clearTimeout(order.timeout);
+            order.arrivalTime = order.arrivalTime;
+            storage.updateOrder(order);
+            clearTimeout(timeouts[order.id]);
+            //region.orders.splice(index, 1);
+
             driver.hasOrder = order;
-            console.log('order accepted: ', order);
-        });
-        socket.on('driverArrived', function(order){
-            //var order = getSmthById(order.id, orders).smth;
-            var order = storage.getOrder(order.id);
-            order.status = 2;
-            console.log('driver arrived: ', order);
         });
         socket.on('completeOrder', function(completedOrder){
             //var order = getSmthById(order.id, orders).smth;
-            var order = storage.getOrder(completedOrder.id);
-            order.complete = id;
-            order.status = 4;
+            completedOrder.complete = id;
+            completedOrder.status = 4;
+            console.log('order complete: ', completedOrder.status);
+            storage.updateOrder(completedOrder);
             driver.hasOrder = false;
-            console.log('order completed: ', order);
+            //var order = storage.getOrder(completedOrder.id);
+            //order.complete = id;
+            //
+            //order.arrivalTime = completedOrder.arrivalTime;
+
+            //console.log('order completed: ', order);
         });
         socket.on('updateRegion', function(regionId){
             if(this.id !== regionId){
@@ -220,27 +225,29 @@ Region.prototype.addDriver = function(id, socket, isMoving){
         });
         socket.on('listenRegion', function(regionId){
             var orders = [];
-            //if(!regions[regionId]) regions[regionId] = new Region(regionId);
             var region = storage.getRegion(regionId);
-            console.log('region: ', region);
+            region.addListener(socket);
             for(var i = 0; i < region.orders.length; i++){
                 var order = region.orders[i];
                 if(!isOrderNotSpoiled(order)) continue; //ToDO delete spoiled order
                 if(order.status == 0) {
-                    console.log('suited order: ', order);
                     orders.push(order)
                 }else{
-                    console.log('order not suited', order);
+                    //console.log('order not suited', order);
                 }
             }
-            region.addListener(socket);
+
             socket.emit('gotOrder', orders);
         })
         socket.on('updateOrderStatus', function(updatedOrder){
-            var order = storage.getOrder(updatedOrder.id);
+            storage.updateOrder(updatedOrder);
+            //console.log('updating order status: ', updatedOrder);
+            //var order = storage.getOrder(updatedOrder.id);
             //var order = getSmthById(updatedOrder.id, orders).smth;
-            order.status = updatedOrder.status;
-            console.log('updating order status: ', order);
+            //order.status = updatedOrder.status;
+            //order.arrivalTime = updatedOrder.arrivalTime;
+
+            //console.log('updating order status: ', order);
         })
     }
 };
@@ -273,15 +280,19 @@ Region.prototype.removeDriver = function(id){
     }
 };
 
-Region.prototype.newOrder = function (order) {
-    this.orders.push(order);
+Region.prototype.newOrder = function (order, handler){
+    console.log('seeking driver for order by ', handler);
+    if(!getSmthById(order.id, this.orders)){
+        console.log('adding order to the region');
+        this.orders.push(order);
+    }
     if(this.listeners.length){
         console.log('there are listeners on this region!');
         for(var i = 0; i < this.listeners.length; i++){
             this.listeners[i].emit('gotOrder', order);
         }
     }
-    console.log('seeking driver for order');
+    //console.log('seeking driver for order');
     var drivers = this.drivers.slice(0);
     for(var i = drivers.length-1; i >= 0; i--){
         if(order.canceledDrivers && order.canceledDrivers.indexOf(drivers[i].id) !== -1){
@@ -309,29 +320,31 @@ Driver.prototype.sendOrder = function(order){
     if(order.length){
         for(var i = 0; i < order.length; i++){
             (function(order){
-                order.timeout = setTimeout(function(){
-                    console.log('timeout for driver', order);
+                timeouts[order.id] = setTimeout(function(){
+                    //console.log('timeout for driver', order);
                     driver.socket.emit('timeout', order.id);
                     if(!order.canceledDrivers) order.canceledDrivers = [];
                     order.canceledDrivers.push(driver.id);
                     if(isOrderNotSpoiled(order)){
                         var region = storage.getRegion(order.region);
-                        region.newOrder(order);
+                        region.newOrder(order, 'timeout');
                     }
                 }, timeoutPerDriver);
+                console.log('timeOut set: ', order.id);
             })(order[i])
         }
     }else{
-        order.timeout = setTimeout(function(){
-            console.log('timeout for driver', order);
+        timeouts[order.id] = setTimeout(function(){
+            //console.log('timeout for driver', order);
             driver.socket.emit('timeout', order.id);
             if(!order.canceledDrivers) order.canceledDrivers = [];
             order.canceledDrivers.push(driver.id);
             if(isOrderNotSpoiled(order)){
                 var region = storage.getRegion(order.region);
-                region.newOrder(order);
+                region.newOrder(order, 'timeout');
             }
         }, timeoutPerDriver);
+        console.log('timeOut set: ', order.id);
     }
 
 };

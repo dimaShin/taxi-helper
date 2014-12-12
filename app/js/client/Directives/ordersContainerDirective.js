@@ -4,7 +4,7 @@
 'use strict';
 define(['Services/ordStatusService', 'Constructors/orderConstructor'], function(){
 
-    function ordersContainer(ordStatusService, orderCreator, swipe){
+    function ordersContainer(ordStatusService, orderCreator, swipe, $filter){
 
         return {
             restrict: 'EA',
@@ -16,14 +16,6 @@ define(['Services/ordStatusService', 'Constructors/orderConstructor'], function(
 
                     },
                     post: function postLink($scope, el, attr, ctrl){
-                        var slider = $('ul.orders-list-container'),
-                            posY, margTop;
-
-                        $('div.shadowed').on('mousedown', function(){
-                            $(this).removeClass('shadowed').on('mouseup', function(){
-                                $(this).addClass('shadowed');
-                            })
-                        });
                         $scope.$watchCollection(
                             function ordersWatcher($scope){
                                 return $scope.orders;
@@ -37,26 +29,6 @@ define(['Services/ordStatusService', 'Constructors/orderConstructor'], function(
                                 }
                             }
                         );
-                        swipe.bind(slider, {
-                            start: function(e){
-                                posY = e.y;
-                                margTop = parseInt(slider.css('marginTop'));
-                                console.log('start: ', posY, margTop);
-                            },
-                            move: function(e){
-                                console.log('moving!', slider);
-                                var m = margTop - (posY - e.y);
-                                console.log('move! margin: ', m);
-                                slider.css('marginTop', m + 'px');
-
-                            },
-                            end: function(){
-
-                            },
-                            cancel: function(){
-
-                            }
-                        });
                     }
                 }
             },
@@ -67,12 +39,15 @@ define(['Services/ordStatusService', 'Constructors/orderConstructor'], function(
                     order.statusText = '<img src="fonts/loading-1.gif" style="width:20px;height:20px"/>';
                     $scope.updateInProgress = true;
                     $scope.socketClient.socket.emit('getOrder', order.id);
-                    $scope.socketClient.socket.on('orderFound', function(updatedOrder){
+                    $scope.socketClient.socket.once('orderFound', function(updatedOrder){
                         console.log('got updated order: ', updatedOrder);
+                        order.basics.status = updatedOrder.status;
                         order.statusText = ordStatusService.getStatus(updatedOrder.status);
                         if(updatedOrder.cabId || order.driver){
                             order.driver = updatedOrder.cabId;
                         }
+                        order.basics.arrivalTime = updatedOrder.arrivalTime;
+                        console.log('arrival Time: ', $filter('date')(order.basics.arrivalTime, 'H:m'));
                         $scope.updateInProgress = false;
                         $scope.$apply();
                     });
@@ -82,7 +57,7 @@ define(['Services/ordStatusService', 'Constructors/orderConstructor'], function(
                 };
                 $scope.showDriver = function(driverId){
                     $scope.socketClient.socket.emit('driverPosReq', driverId);
-                    $scope.socketClient.socket.on('driverPosResp', function(pos){
+                    $scope.socketClient.socket.once('driverPosResp', function(pos){
                         var latLng = new google.maps.LatLng(pos.lat, pos.lng);
                         $scope.map.setCenter(latLng);
                         $scope.map.addMarker(latLng, driverId, {icon: 'img/cabs.png'});

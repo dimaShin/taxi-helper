@@ -2,7 +2,7 @@
  * Created by iashind on 27.11.14.
  */
 'use strict';
-define(['app', 'socket.io-client', 'Constructors/orderConstructor', 'Services/positioningService'], function(app, io, orderConstructor){
+define(['app', 'socket.io-client', 'Constructors/orderConstructor', 'Services/positioningService'], function(app, io){
     function socketService(regionService, orderCreator, $interval, positioningService){
         var socket;
         var $scope;
@@ -11,7 +11,6 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor', 'Services/po
         };
 
         SocketClient.prototype.connect = function(){
-
             this.socket = io('/', {forceNew: true});
             return this.introduce(arguments);
         };
@@ -31,30 +30,33 @@ define(['app', 'socket.io-client', 'Constructors/orderConstructor', 'Services/po
             this.socket.emit('listenRegion', regionId);
             this.socket.removeAllListeners('gotOrder');
             this.socket.on('gotOrder', function gotOrder(order){
-                console.log('got order: ', order);
-                if(order && order.length !== 0){
+                if(order && order.length){
+                    console.log('got order: ', order);
                     order = orderCreator.getOrder(order);
                     if(order.length){
                         var length = order.length;
                         for(var i = 0; i < order.length; i++){
                             order[i].asyncBuildRoute().then(
                                 function success(completeOrder){
-                                    scope.driver.orders.push(completeOrder);
+                                    scope.orders.push(completeOrder);
                                     length--;
                                 }
                             )
                         }
-                    }else{
+                    }else if(order.basics){
                         order.asyncBuildRoute().then(
                             function success(completeOrder){
-                                scope.driver.orders.unshift(completeOrder);
+                                scope.orders.unshift(completeOrder);
                             }
                         )
                     }
+                }else{
+                    console.log('no orders in this region');
                 }
                 var interval = $interval(function(){
                     if(!length){
                         //scope.$apply();
+                        console.log('orders ready: ', scope.orders);
                         $interval.cancel(interval);
                     }
                 }, 100);

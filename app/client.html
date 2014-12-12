@@ -16,10 +16,11 @@
 <div class="order-compiler" order-compiler>
 
 </div>
+<!--<button type="button" class="temp" ng-init="h = getWindowHeight()" ng-click="h = getWindowHeight()">{{ h }}</button>-->
 <div class="map-canvas container-fluid" map-canvas>
 
 </div>
-<div class="footer shadowed container-fluid" ng-if="orders.length" ng-click="visibility.container = true" ng-hide="visibility.container">
+<div click-animation class="footer animation shadow-top container-fluid" ng-if="orders.length" ng-click="visibility.container = true" ng-hide="visibility.container">
     заказы
 </div>
 <div class="orders-container slide-up" orders-container ng-if="orders.length && visibility.container"></div>
