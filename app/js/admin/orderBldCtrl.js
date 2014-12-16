@@ -7,15 +7,15 @@ define(['app', 'Services/socketService',
     'Constructors/orderConstructor',
     'Services/addressService',
     'async!googleMapsApi'],
+    /**
+     * @function orderBldCtrl
+     * @export app
+     * @export socketService
+     * @export MapConstructor
+     */
     function(app, socketService, MapConstructor){
 
-    var directionService = new google.maps.DirectionsService(),
-        renderer = new google.maps.DirectionsRenderer();
-
-    //io.on('connect', function(){
-    //    io.emit('introduce', {driver: false});
-    //});
-    //console.log(io);
+    var renderer = new google.maps.DirectionsRenderer();
 
     function controller($scope, addressService, socketService, orderCreator){
         var mapCanvas = $('div#googleMap')[0],
@@ -34,44 +34,11 @@ define(['app', 'Services/socketService',
                     height: $(window).height()
                 }
             },
-            function(newValue, oldValue){
+            function(newValue){
                 $(mapCanvas).width(newValue.width - 4).height(newValue.height - 4);
                 $scope.map = new MapConstructor().initialize(mapCanvas);
-                //map = initializeMap(mapCanvas);
             }
         );
-        function initializeMap(el, options){
-            var defOptions = {
-                zoom: 14,
-                center: new google.maps.LatLng(49.9672102, 36.3162887),
-                panControl: false,
-                zoomControl: false,
-                mapTypeControl: false,
-                scaleControl: false,
-                streetViewControl: false,
-                overviewMapControl: false
-                }, map;
-            if(options) $.extend(defOptions, options);
-            map = new google.maps.Map(el , defOptions);
-            google.maps.event.addListener(map, 'click', function(e){
-                var region = createRegion(e.latLng, 3000);
-                region.setMap(map);
-                google.maps.event.addListener(region, 'dragend', function(){
-                });
-                google.maps.event.addListener(region, 'radius_changed', function(){
-                });
-            });
-            return map;
-        };
-
-        function createRegion(center, radius){
-            return new google.maps.Circle({
-                center: center,
-                radius: radius,
-                draggable: true,
-                editable: true
-            });
-        };
 
         $scope.calcRoute = function(){
             renderer.setMap(null);
@@ -152,5 +119,4 @@ define(['app', 'Services/socketService',
     }
 
     app.controller('orderBldCtrl', controller);
-    //return controller;
 })

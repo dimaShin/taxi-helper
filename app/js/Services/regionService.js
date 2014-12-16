@@ -2,8 +2,18 @@
  * Created by iashind on 27.11.14.
  */
 'use strict';
-define(['app', 'async!googleMapsApi'], function(app){
+define(['app', 'async!googleMapsApi'],
+    /**
+     * @module regionService
+     * holds map regions
+     * @param app
+     */
+function(app){
     function service(){
+        /**
+         * @array of regions
+         * @type {{circle: google.maps.Circle, id: string, name: string, radius: number}[]}
+         */
         var regions = [
             {
                 //aleevka
@@ -55,7 +65,12 @@ define(['app', 'async!googleMapsApi'], function(app){
         ];
 
 
-
+        /**
+         * @function getRegionId
+         * @param point
+         * @returns {regionId}
+         * computes nearest region to the point
+         */
         function getRegionId(point){
             var suitedRegions = [];
             for(var i = 0; i < regions.length; i++){
@@ -72,13 +87,11 @@ define(['app', 'async!googleMapsApi'], function(app){
                     },
                     pointLat = point.lat(),
                     pointLng = point.lng();
-                console.log('getting nearest region: ', pointLat, pointLng);
                 for(var i = 0; i < suitedRegions.length; i++){
                     var center = suitedRegions[i].circle.getCenter(),
                         centerLat = center.lat(),
                         centerLng = center.lng(),
                         distance = Math.abs(centerLat - pointLat) + Math.abs(centerLng - pointLng);
-                    console.log('got distance: ', distance);
                     if(distance < nearest.distance){
                         nearest = {
                             distance: distance,
@@ -86,8 +99,6 @@ define(['app', 'async!googleMapsApi'], function(app){
                         }
                     }
                 }
-
-                console.log('1+ suited regions: ', nearest.regionId);
                 return nearest.regionId;
             }
         };

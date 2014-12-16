@@ -3,7 +3,12 @@ Created by iashind on 12.12.14.
  */
 'use strict';
 define([''], function(){
-
+    /**
+     *@function clickAnimation
+     * @directive
+     * @returns click-animation ng-Directive
+     * holds animation on click/touch
+     */
     function clickAnimation(){
 
         return {
@@ -11,9 +16,9 @@ define([''], function(){
             scope: {},
             link: function($scope, el, attr, ctrl){
                 el.on('mousedown, touchstart', function(){
-                    el.removeClass('animation');
+                    el.removeClass('animated');
                     el.one('mouseup, touchend', function(){
-                        el.addClass('animation');
+                        el.addClass('animated');
                     })
                 })
             }

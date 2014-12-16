@@ -3,7 +3,13 @@
  */
 'use strict';
 define([], function(){
-
+    /**
+     * @directive
+     * @function verticalSwipe
+     * @param swipe
+     * @returns vertical-swipe ng-Directive
+     * holds vertical scrolling. Used when overflow hidden
+     */
     function verticalSwipe(swipe){
 
         return{

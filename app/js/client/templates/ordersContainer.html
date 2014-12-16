@@ -19,11 +19,11 @@
                 <div class="col-xs-6"><button type="button" class="btn btn-sm pull-right" ng-click="showDriver(order.driver)">показать</button> </div>
             </div>
             <div class="container-fluid" ng-if="order.driver">
-                <div class="" ng-if="order.basics.status < 2">Машина будет в: {{ order.basics.arrivalTime | date: 'H:m' }}</div>
-                <div class="" ng-if="order.basics.status > 2">Время прибытия: {{ order.basics.arrivalTime | date: 'H:m' }}</div>
-                <div class="" ng-if="order.basics.status == 2">Машина прибыла в: {{ order.basics.arrivalTime | date: 'H:m'}}</div>
+                <div class="" ng-if="order.basics.status < 2">Машина будет в: {{ order.basics.arrivalTime | date: 'H:mm' }}</div>
+                <div class="" ng-if="order.basics.status > 2">Время прибытия: {{ order.basics.arrivalTime | date: 'H:mm' }}</div>
+                <div class="" ng-if="order.basics.status == 2">Машина прибыла в: {{ order.basics.arrivalTime | date: 'H:mm'}}</div>
             </div>
         </li>
     </ul>
-    <div click-animation class="footer container-fluid animation shadow-top" ng-click="visibility.container = false; visibility.compiler = false">вернуться на карту</div>
+    <div click-animation class="footer container-fluid animated shadow-top" ng-click="visibility.container = false; visibility.compiler = false">вернуться на карту</div>
 </div>

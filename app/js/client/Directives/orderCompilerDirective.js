@@ -3,7 +3,13 @@
  */
 'use strict';
 define(['root/utils', 'Services/addressService', 'Constructors/orderConstructor'], function(utils){
-
+    /**
+     * @function orderCompiler
+     * @exports addressService
+     * @exports orderCreator
+     * @returns {{restrict: string, templateUrl: string, compile: Function, controller: Function}}
+     * receives and compiles order from user data
+     */
     function orderCompiler(addressService, orderCreator){
 
         return {

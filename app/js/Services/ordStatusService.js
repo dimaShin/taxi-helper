@@ -2,8 +2,16 @@
  * Created by iashind on 03.12.14.
  */
 'use strict';
-define(['app'], function(app){
 
+/**
+ * @module statusService
+ */
+define(['app'], function(app){
+    /**
+     * @function statusService
+     * holds text value of status
+     * @returns {{getStatus: Function}}
+     */
     function statusService(){
         var status = [
             'в очереди',
@@ -13,6 +21,12 @@ define(['app'], function(app){
             'выполнен'
         ];
         return {
+            /**
+             * @function getStatus
+             * convert int value of status into text
+             * @param id
+             * @returns {string}
+             */
             getStatus: function(id){
                 return status[id];
             }

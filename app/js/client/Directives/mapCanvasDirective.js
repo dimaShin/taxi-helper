@@ -3,7 +3,12 @@
  */
 'use strict';
 define(['Constructors/mapConstructor', 'async!googleMapsApi'], function(MapConstructor){
-
+    /**
+     * @function mapCanvas
+     * @param positioningService
+     * @returns {{restrict: string, compile: Function, controller: Function}}
+     * passenger's map directive
+     */
     function mapCanvas(positioningService){
 
         return {
@@ -12,6 +17,10 @@ define(['Constructors/mapConstructor', 'async!googleMapsApi'], function(MapConst
 
                 return {
                     pre: function pre($scope, el, attr, ctrl){
+                        /**
+                         * @function screenSizeWatcher
+                         * watch screen size and re-render map
+                         */
                         $scope.$watchCollection(
                             function screenSizeWatcher(){
                                 return {

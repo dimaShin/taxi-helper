@@ -2,9 +2,23 @@
  * Created by iashind on 26.11.14.
  */
 'use strict';
+
+/**
+ *addressService предназначен для получения google.maps LatLng object из предоставленных пользователем текстовых данных.
+ *
+ *@module addressService
+ *
+ */
 define(['app', 'async!googleMapsApi'], function(app){
     var geocoder = new google.maps.Geocoder();
     app.factory('addressService', function($interval){
+
+ /**
+ *@function getLatLng
+ *@param {object} points ({object}points.start, {object}points.finish, {array}points.waypoints)
+ * converts points into google maps LatLng object
+ *@return promise
+ */
         function getLatLng(points){
             var deferred = $.Deferred(),
                 pointLatLng = {

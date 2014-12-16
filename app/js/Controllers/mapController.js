@@ -4,19 +4,24 @@
 'use strict';
 
 define(['angular', 'async!googleMapsApi'], function(){
-
-    function mapController($scope, operatorService, $interval, positioningService, $location, socketService, orderCreator, $filter){
-
-        console.log('initialize: ', $scope.driver);
-
+    /**
+     * @function mapController
+     *
+     * @exports positioningService
+     * @exports $filter
+     *
+     * initialize and serve /map route
+     */
+    function mapController($scope, positioningService, $filter){
+        /**
+         * @function queueWatcher
+         * holds queue state change connect and disconnect to the socket
+         */
             $scope.$watch(
                 function queueWatcher($scope){
                     return $scope.driver.inTheQueue;
                 },
                 function(newValue){
-
-                    //$scope.$parent.inTheQueue = newValue;
-                    //console.log('inTheQueue: ', $scope, $scope.$parent);
                     if(newValue){
                         positioningService.getCurrentPos().then(
                             function success(position){
@@ -30,32 +35,35 @@ define(['angular', 'async!googleMapsApi'], function(){
                     }
                 }
             );
-
-            $('div#mainHeader')
-                .on('mousedown', function(){
-                    $(this).removeClass('main-header-shadowed');
-                })
-                .on('mouseup', function(){
-                $(this).addClass('main-header-shadowed');
-            });
-
+        /**
+         * @function renderRoute
+         * @fires mapController:renderRoute
+         * @param route
+         * tells mapDirective to render route
+         */
         function renderRoute(route){
             $scope.$broadcast('mapController:renderRoute', route);
         };
-
+        /**
+         * @function cancelRoute
+         * @param order
+         * @fires cancelOrder
+         * cancels order and returns it into order's queue
+         */
         function cancelRoute(order){
             var index = $scope.driver.orders.indexOf(order);
             $scope.driver.orders.splice(index, 1);
             $scope.driver.socketClient.socket.emit('canceledOrder', order.basics);
-            //clearTimeout(order.timeout);
-            //$scope.$apply();
         };
-
+        /**
+         * @function go
+         * @param order
+         * @fires acceptedOrder
+         * accepts order and creates route to the start point. Cancels all other orders
+         */
         function go(order){
             if($scope.driver.onTheRoute) completeRoute();
-            //clearTimeout(order.timeout);
             $scope.driver.currentRoute = order;
-            console.log('order: ', order);
             $scope.driver.socketClient.updateRegion(order.finish);
             $scope.driver.onTheRoute = true;
             for(var i = $scope.driver.orders.length - 1; i >= 0; i--){
@@ -74,19 +82,20 @@ define(['angular', 'async!googleMapsApi'], function(){
                         travelMode: google.maps.TravelMode['DRIVING'],
                         unitSystem: google.maps.UnitSystem.METRIC
                     };
-                    (new google.maps.DirectionsService).route(routeToPassenger, function(route, status){
+                    (new google.maps.DirectionsService).route(routeToPassenger, function(route){
                         var curTime = new Date().getTime();
                         order.basics.arrivalTime = curTime + (route.routes[0].legs[0].duration.value * 1.3 * 1000);
                         $scope.driver.socketClient.socket.emit('acceptedOrder', order.basics);
                     })
                 }
-            )
-
-
-
-            $scope.$broadcast('mapCtrl:go');
+            );
+//            $scope.$broadcast('mapCtrl:go');
         };
-
+        /**
+         * @function completeRoute
+         * @fires completeOrder
+         * completes current order
+         */
         function completeRoute(){
             positioningService.getCurrentPos().then(
                 function success(pos){
@@ -98,33 +107,34 @@ define(['angular', 'async!googleMapsApi'], function(){
                 }
             )
         };
-
-        function arrived(order){
-            order.basics.waiting = true;
-            $scope.driver.socketClient.socket.emit('driverArrived', order.basics);
-        };
-
+        /**
+         * @function orderStatusWatcher
+         * @fires updateOrderStatus
+         * watches order status changes and sync it with server
+         */
         $scope.$watch(
             function orderStatusWatcher($scope){
                 return $scope.driver.currentRoute.basics ? $scope.driver.currentRoute.basics.status : undefined;
             },
             function(newValue, oldValue){
-                console.log('status changed: ', newValue, oldValue);
                 if(newValue !== oldValue && $scope.driver.currentRoute.basics) {
-                    var curTime = new Date().getTime(), arTime;
+                    var curTime = new Date().getTime();
+                    /**
+                     * arrivalTime for status 2 - time, when driver comes to the start point
+                     * arrivalTime for status 3 - time, when driver hopes to come to the finish point
+                     */
                     switch(newValue){
-                        case 2: arTime = curTime; break;
-                        case 3: arTime = curTime + $scope.driver.currentRoute.duration; break;
+                        case 2: $scope.driver.currentRoute.basics.arrivalTime = curTime; break;
+                        case 3: $scope.driver.currentRoute.basics.arrivalTime = curTime + $scope.driver.currentRoute.duration; break;
                     }
-                    var arTimeFormatted = $filter('date')(arTime, 'H:m');
-                    console.log('arTime: ', arTimeFormatted);
-                    $scope.driver.currentRoute.basics.arrivalTime = arTime;
                     $scope.driver.socketClient.socket.emit('updateOrderStatus', $scope.driver.currentRoute.basics);
-                    console.log('status: ', $scope.driver.currentRoute.basics);
                 }
             }
         );
-
+        /**
+         * methods that goes to the child isolated scopes
+         * @type {{getCurrentPos: Function, renderRoute: renderRoute, cancelRoute: cancelRoute, go: go, completeRoute: completeRoute}}
+         */
         $scope.methods = {
             getCurrentPos: positioningService.getCurrentPos,
             renderRoute: renderRoute,
